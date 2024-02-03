@@ -1,0 +1,6 @@
+@Bie.Api_HostAddress = http://localhost:5133
+
+GET {{Bie.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
