@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Bie.Api.Controllers;
 
 [Authorize]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class CompanyController : BaseController
 {
     private readonly ICompanyService _companyService;
@@ -84,7 +84,7 @@ public class CompanyController : BaseController
             return NotFound(ex.Message);
         }
     }
-    [HttpGet("{id:int}")]
+    [HttpGet]
     public async Task<IActionResult> Get(string id)
     {
         var company = await _companyService.GetByIdAsync(id);

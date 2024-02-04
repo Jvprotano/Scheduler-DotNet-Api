@@ -5,6 +5,7 @@ using Bie.Business.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bie.Api.Controller;
+
 [Route("[controller]")]
 public class ScheduleController : BaseController
 {

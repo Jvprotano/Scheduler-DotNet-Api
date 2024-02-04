@@ -1,16 +1,14 @@
-using Bie.Data.Context.Extensions;
 using Bie.Business.Models;
 using Bie.Business.Models.Base;
-
+using Bie.Data.Context.Extensions;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-
 namespace Bie.Data.Context;
 
-public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>, int>
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 {
     public ApplicationDbContext(DbContextOptions options) : base(options)
     {

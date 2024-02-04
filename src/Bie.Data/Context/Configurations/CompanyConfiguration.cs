@@ -1,5 +1,5 @@
-using Bie.Data.Context.Configurations.Base;
 using Bie.Business.Models;
+using Bie.Data.Context.Configurations.Base;
 
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -17,8 +17,5 @@ public class CompanyConfiguration : ProfileBaseConfiguration<Company>
         builder.HasMany(c => c.ServicesOffered)
             .WithOne(c => c.Company)
             .HasForeignKey(c => c.CompanyId);
-
-        builder.Ignore(c => c.SelectedCategoryIds);
-        builder.Ignore(c => c.SelectedServicesNames);
     }
 }

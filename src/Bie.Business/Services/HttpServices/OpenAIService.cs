@@ -1,6 +1,8 @@
 using Bie.Business.Interfaces.HttpServices;
-using System.Reflection;
+
 using Microsoft.Extensions.Configuration;
+
+using System.Reflection;
 
 namespace Bie.Business.Services.HttpServices;
 public class OpenAIService : IOpenAIService

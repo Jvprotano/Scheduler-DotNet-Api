@@ -28,6 +28,7 @@ public static class ServiceExtensions
         services.AddScoped<ICompanyService, CompanyService>();
         services.AddScoped<IOpenAIService, OpenAIService>();
         services.AddScoped<IImageUploadService, ImageUploadService>();
+        services.AddScoped<IAuthService, AuthService>();
         #endregion
     }
 }
