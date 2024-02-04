@@ -1,6 +1,8 @@
+using Asp.Versioning;
+
 using AutoMapper;
 
-using Bie.Api.Controllers.Base;
+using Bie.Api.Controllers.V1.Base;
 using Bie.Api.DTOs;
 using Bie.Business.Interfaces.Services;
 using Bie.Business.Models;
@@ -8,10 +10,10 @@ using Bie.Business.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Bie.Api.Controllers;
+namespace Bie.Api.Controllers.V1;
 
-[Route("[controller]")]
-[ApiController]
+[ApiVersion(1.0)]
+[Route("api/v{version:apiVersion}/[controller]")]
 public class AccountController : BaseController
 {
     private readonly UserManager<ApplicationUser> _userManager;

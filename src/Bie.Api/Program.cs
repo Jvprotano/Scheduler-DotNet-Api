@@ -1,36 +1,69 @@
+using Asp.Versioning;
+
+using Bie.Api.Configuration.Swagger;
 using Bie.Business.Models;
 using Bie.Data.Context;
 using Bie.Data.Context.Extensions;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
+using Swashbuckle.AspNetCore.SwaggerGen;
+
 using System.Text;
 
-// Add this using directive
+[assembly: Microsoft.AspNetCore.Mvc.ApiController]
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAutoMapper(typeof(Program));
 
-builder.Services.AddSwaggerGen(options =>
-{
-    // options.SwaggerDoc("v1", new() { Title = "Bie.Api", Version = "v1" });
+builder.Services.AddAuthorization();
 
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+builder.Services.AddProblemDetails();
+builder.Services.AddApiVersioning(
+                    options =>
+                    {
+                        options.ReportApiVersions = true;
+
+                        options.Policies.Sunset(0.9)
+                                        .Effective(DateTimeOffset.Now.AddDays(60))
+                                        .Link("policy.html")
+                                            .Title("Versioning Policy")
+                                            .Type("text/html");
+                    })
+                .AddMvc()
+                .AddApiExplorer(
+                    options =>
+                    {
+                        options.GroupNameFormat = "'v'VVV";
+                        options.SubstituteApiVersionInUrl = true;
+                    });
+
+builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerGenOptions>();
+builder.Services.AddSwaggerGen(
+    options =>
     {
-        Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer",
-        BearerFormat = "JWT",
-        In = ParameterLocation.Header,
-        Description = "JWT Authorization header using the Bearer scheme."
-    });
+        options.OperationFilter<SwaggerDefaultValues>();
 
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+
+        options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+        {
+            Name = "Authorization",
+            Type = SecuritySchemeType.ApiKey,
+            Scheme = "Bearer",
+            BearerFormat = "JWT",
+            In = ParameterLocation.Header,
+            Description = "JWT Authorization header using the Bearer scheme."
+        });
+
+        options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
             new OpenApiSecurityScheme
@@ -44,26 +77,12 @@ builder.Services.AddSwaggerGen(options =>
             Array.Empty<string>()
         }
     });
-});
-
-builder.Services.AddControllers();
-
-builder.Services.AddAuthorization();
-
-builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
-
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
-
+    });
 
 builder.Services.AddAuthentication(opt =>
 {
     opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-
 })
     .AddJwtBearer(options =>
     {
@@ -79,23 +98,37 @@ builder.Services.AddAuthentication(opt =>
         };
     });
 
+builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
+    .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
 
 builder.Services.AddRepositories();
 
 var app = builder.Build();
 
-app.MapDefaultControllerRoute();
-
-// app.MapIdentityApi<ApplicationUser>();
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(
+        options =>
+        {
+            var descriptions = app.DescribeApiVersions();
+
+            foreach (var description in descriptions)
+            {
+                var url = $"/swagger/{description.GroupName}/swagger.json";
+                var name = description.GroupName.ToUpperInvariant();
+                options.SwaggerEndpoint(url, name);
+            }
+        });
 }
 
-app.MapSwagger();
-
 app.UseHttpsRedirection();
-
+app.UseAuthorization();
+app.MapControllers();
 app.Run();

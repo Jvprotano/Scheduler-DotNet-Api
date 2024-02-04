@@ -1,6 +1,8 @@
+using Asp.Versioning;
+
 using AutoMapper;
 
-using Bie.Api.Controllers.Base;
+using Bie.Api.Controllers.V1.Base;
 using Bie.Api.DTOs;
 using Bie.Business.Interfaces.Services;
 using Bie.Business.Models;
@@ -8,25 +10,19 @@ using Bie.Business.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Bie.Api.Controllers;
+namespace Bie.Api.Controllers.V1;
 
-[ApiController]
 [Route("[controller]")]
+[ApiVersion("1.0")]
 public class SchedulingController : BaseController
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly ICompanyService _companyService;
     private readonly ISchedulingService _serviceScheduling;
     private readonly IMapper _mapper;
 
-    public SchedulingController(ILogger<SchedulingController> logger, ICompanyService companyService,
-     IMapper mapper, ISchedulingService serviceScheduling, UserManager<ApplicationUser> userManager) : //base(logger)
-    base()
+    public SchedulingController(IMapper mapper, ISchedulingService serviceScheduling) : base()
     {
-        _companyService = companyService;
         _mapper = mapper;
         _serviceScheduling = serviceScheduling;
-        _userManager = userManager;
     }
     // [HttpGet("{companyId}")]
     // public async Task<IActionResult> Create(string companyId)
