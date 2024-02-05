@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Bie.Api.DTOs;
-public class RegisterViewModel
+namespace Bie.Api.DTOs.Request;
+public class RegisterDto
 {
     public string? FirstName { get; set; }
     public string? LastName { get; set; }

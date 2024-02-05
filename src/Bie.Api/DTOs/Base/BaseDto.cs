@@ -1,8 +1,8 @@
 using Bie.Business.Enums;
 
 namespace Bie.Api.DTOs.Base;
-public class BaseViewModel
+public class BaseDto
 {
-    public string id { get; set; }
+    public string? Id { get; set; }
     public StatusEnum? Status { get; set; }
 }

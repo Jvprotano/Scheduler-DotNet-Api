@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/d17677c1-9269-4fa2-a2ac-c6c158120902/resourceGroups/schedulerGroup/providers/Microsoft.Web/sites/agende-api",
+    "appService.deploySubpath": "."
+}

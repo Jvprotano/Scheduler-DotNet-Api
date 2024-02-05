@@ -1,9 +1,8 @@
-using Asp.Versioning;
-
 using AutoMapper;
 
 using Bie.Api.Controllers.V1.Base;
-using Bie.Api.DTOs;
+using Bie.Api.DTOs.Request;
+using Bie.Api.DTOs.Response;
 using Bie.Business.Interfaces.Services;
 using Bie.Business.Models;
 
@@ -13,7 +12,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace Bie.Api.Controllers.V1;
 
 [Authorize]
-[ApiVersion(1.0)]
 [Route("api/v{version:apiVersion}/[controller]")]
 public class CompanyController : BaseController
 {
@@ -27,7 +25,7 @@ public class CompanyController : BaseController
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody] CompanyViewModel model)
+    public async Task<IActionResult> Post([FromBody] CompanyRequestDto model)
     {
         try
         {
@@ -44,7 +42,7 @@ public class CompanyController : BaseController
     }
 
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> Put([FromBody] CompanyViewModel model)
+    public async Task<IActionResult> Put([FromBody] CompanyRequestDto model)
     {
         try
         {
@@ -90,23 +88,28 @@ public class CompanyController : BaseController
     [HttpGet]
     public async Task<IActionResult> Get(string id)
     {
-        var company = await _companyService.GetByIdAsync(id);
-        return Ok(company);
+        var companyTest = new CompanyResponseDto()
+        {
+            Id = "abcId",
+            Name = "Cartucho",
+            Description = "Descrição"
+
+        };
+        return this.SuccessResponse(companyTest);
+
+        var model = _mapper.Map<CompanyResponseDto>(await _companyService.GetByIdAsync(id));
+
+        return Ok(model);
     }
     [HttpGet]
     [Route("GetByUserId")]
     public async Task<IActionResult> GetByUserId(string userId)
     {
-        var userName = User != null && User.Identity != null ? User.Identity.Name : null;
-        if (userName != null)
+        if (userId != null)
         {
-            // var user = await _userManager.FindByNameAsync(userName);
-            // if (user != null)
-            // {
-            //     user.Companies = (await _serviceCompany.GetCompaniesByUserAsync(user.Id)).ToList();
-            //     var model = _mappper.Map<AccountViewModel>(user);
-            //     return Ok(model);
-            // }
+            var companies = (await _companyService.GetCompaniesByUserAsync(userId)).ToList();
+            var model = _mapper.Map<List<CompanyResponseDto>>(companies);
+            return Ok(model);
         }
 
         return NotFound();

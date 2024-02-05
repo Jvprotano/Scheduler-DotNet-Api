@@ -1,17 +1,19 @@
-using Bie.Business.Models;
-using Bie.Api.DTOs;
-
 using AutoMapper;
+
+using Bie.Api.DTOs;
+using Bie.Api.DTOs.Request;
+using Bie.Api.DTOs.Response;
+using Bie.Business.Models;
 
 namespace Bie.Api.Configuration.Mappings;
 public class CompanyProfile : Profile
 {
     public CompanyProfile()
     {
-        CreateMap<Company, CompanyViewModel>();
-        CreateMap<CompanyViewModel, Company>();
+        CreateMap<Company, CompanyRequestDto>().ReverseMap();
+        CreateMap<Company, CompanyResponseDto>().ReverseMap();
 
-        CreateMap<Company, SchedulingViewModel>()
+        CreateMap<Company, SchedulingRequestDto>()
         .ForMember(dest => dest.CompanyId, opt => opt.MapFrom(src => src.Id))
         .ForMember(dest => dest.ScheduledDate, opt => opt.MapFrom(src => DateTime.Now));
     }

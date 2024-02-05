@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Bie.Api.DTOs;
-public class LoginViewModel
+namespace Bie.Api.DTOs.Request;
+public class LoginDto
 {
     [Required(ErrorMessage = "Field email or username is required")]
     [Display(Name = "E-mail or User Name")]

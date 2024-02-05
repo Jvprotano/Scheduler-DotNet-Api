@@ -1,14 +1,14 @@
-using Bie.Business.Models;
-using Bie.Api.DTOs;
 using AutoMapper;
+using Bie.Api.DTOs.Request;
+using Bie.Business.Models;
 
 namespace Bie.Api.Configuration.Mappings;
 public class UserProfile : Profile
 {
     public UserProfile()
     {
-        CreateMap<UserViewModel, ApplicationUser>();
-        CreateMap<RegisterViewModel, ApplicationUser>();
-        CreateMap<LoginViewModel, ApplicationUser>();
+        CreateMap<UserResponseDto, ApplicationUser>();
+        CreateMap<RegisterDto, ApplicationUser>();
+        CreateMap<LoginDto, ApplicationUser>();
     }
 }

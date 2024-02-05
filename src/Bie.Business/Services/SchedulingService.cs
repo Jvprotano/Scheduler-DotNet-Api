@@ -4,8 +4,6 @@ using Bie.Business.Interfaces.Services;
 using Bie.Business.Models;
 using Bie.Business.Services.Base;
 
-using System;
-
 namespace Bie.Business.Services;
 public class SchedulingService : Service<Scheduling>, ISchedulingService
 {

@@ -1,9 +1,7 @@
-using Asp.Versioning;
-
 using AutoMapper;
 
 using Bie.Api.Controllers.V1.Base;
-using Bie.Api.DTOs;
+using Bie.Api.DTOs.Request;
 using Bie.Business.Interfaces.Services;
 using Bie.Business.Models;
 
@@ -12,8 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Bie.Api.Controllers.V1;
 
-[ApiVersion(1.0)]
-[Route("api/v{version:apiVersion}/[controller]")]
+[Route("api/v{version:apiVersion}")]
 public class AccountController : BaseController
 {
     private readonly UserManager<ApplicationUser> _userManager;
@@ -33,25 +30,8 @@ public class AccountController : BaseController
         _authService = authService;
     }
     [HttpPost]
-    [Route("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterViewModel model)
-    {
-        if (await _userManager.FindByEmailAsync(model.Email ?? "") != null)
-            ModelState.AddModelError(string.Empty, "Email already exists");
-        if (model.Password != model.ConfirmPassword)
-            ModelState.AddModelError(string.Empty, "Passwords don't match");
-
-        var user = _mappper.Map<ApplicationUser>(model);
-        var result = await _userManager.CreateAsync(user, model.Password ?? "");
-
-        if (result.Succeeded)
-            return Ok(result);
-
-        return BadRequest(result.Errors);
-    }
-    [HttpPost]
     [Route("login")]
-    public async Task<IActionResult> Login([FromBody] LoginViewModel model)
+    public async Task<IActionResult> Login([FromBody] LoginDto model)
     {
         var user = await _userManager.FindByEmailAsync(model.EmailOrUserName ?? "");
 
@@ -66,5 +46,22 @@ public class AccountController : BaseController
             }
         }
         return BadRequest("User not found or password is incorrect");
+    }
+    [HttpPost]
+    [Route("register")]
+    public async Task<IActionResult> Register([FromBody] RegisterDto model)
+    {
+        if (await _userManager.FindByEmailAsync(model.Email ?? "") != null)
+            ModelState.AddModelError(string.Empty, "Email already exists");
+        if (model.Password != model.ConfirmPassword)
+            ModelState.AddModelError(string.Empty, "Passwords don't match");
+
+        var user = _mappper.Map<ApplicationUser>(model);
+        var result = await _userManager.CreateAsync(user, model.Password ?? "");
+
+        if (result.Succeeded)
+            return Ok(result);
+
+        return BadRequest(result.Errors);
     }
 }

@@ -4,8 +4,6 @@ using Bie.Data.Context;
 
 using Microsoft.EntityFrameworkCore;
 
-using System;
-
 namespace Bie.Data.Repositories.Base;
 public class Repository<T> : IRepository<T> where T : EntityBase
 {

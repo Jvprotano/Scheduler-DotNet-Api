@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 using System.ComponentModel.DataAnnotations;
 
-namespace Bie.Api.DTOs;
-public class CompanyViewModel : BaseViewModel
+namespace Bie.Api.DTOs.Request;
+public class CompanyRequestDto : BaseDto
 {
     [Display(Name = "Name")]
     public string? Name { get; set; }

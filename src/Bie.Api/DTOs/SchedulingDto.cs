@@ -1,7 +1,5 @@
-using Microsoft.AspNetCore.Mvc.Rendering;
-
-namespace Bie.Api.DTOs;
-public class SchedulingViewModel
+namespace Bie.Api.DTOs.Request;
+public class SchedulingRequestDto
 {
     public int CompanyId { get; set; }
     public int CustomerId { get; set; }

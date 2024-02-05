@@ -1,4 +1,3 @@
-using Asp.Versioning;
 using Bie.Api.Controllers.V1.Base;
 using Bie.Business.Enums;
 using Bie.Business.Interfaces.Services;
@@ -7,8 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Bie.Api.Controller;
 
-[Route("[controller]")]
-[ApiVersion("1.0")]
+[Route("api/v{version:apiVersion}/[controller]")]
 public class ScheduleController : BaseController
 {
     private readonly ICompanyService _companyService;
@@ -30,8 +28,8 @@ public class ScheduleController : BaseController
         return Ok();
     }
     [HttpGet]
-    [Route("Open")]
-    public async Task<IActionResult> Open(string companyId)
+    [Route("Open/{companyId}")]
+    public async Task<IActionResult> Open([FromRoute] string companyId)
     {
         var company = await _companyService.GetByIdAsync(companyId);
 

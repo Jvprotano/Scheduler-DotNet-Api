@@ -7,8 +7,6 @@ using Bie.Business.Models;
 using Bie.Business.Services.Base;
 using Bie.Business.Services.HttpServices;
 
-using System;
-
 namespace Bie.Business.Services;
 public class CompanyService : Service<Company>, ICompanyService
 {
