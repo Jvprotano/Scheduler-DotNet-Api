@@ -486,3 +486,4 @@ $RECYCLE.BIN/
 *.dll
 src/Bie.Api/bin/Debug/net8.0/Bie.Api.dll
 src/Bie.Api/bin/Debug/net8.0/Bie.Api.pdb
+src/Bie.Data/obj/Debug/net8.0/Bie.Data.AssemblyInfo.cs
