@@ -484,3 +484,5 @@ $RECYCLE.BIN/
 *.swp
 
 *.dll
+src/Bie.Api/bin/Debug/net8.0/Bie.Api.dll
+src/Bie.Api/bin/Debug/net8.0/Bie.Api.pdb
