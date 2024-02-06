@@ -49,6 +49,7 @@ builder.Services.AddApiVersioning(
                     });
 
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerGenOptions>();
+
 builder.Services.AddSwaggerGen(
     options =>
     {
@@ -115,6 +116,7 @@ var app = builder.Build();
 
 // if (app.Environment.IsDevelopment())
 // {
+
 app.UseSwagger();
 app.UseSwaggerUI(
     options =>
@@ -128,6 +130,7 @@ app.UseSwaggerUI(
             options.SwaggerEndpoint(url, name);
         }
     });
+
 // }
 
 app.UseHttpsRedirection();

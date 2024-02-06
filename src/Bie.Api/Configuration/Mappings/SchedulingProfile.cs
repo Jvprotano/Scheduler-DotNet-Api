@@ -1,6 +1,5 @@
 using AutoMapper;
-
-using Bie.Api.DTOs;
+using Bie.Api.DTOs.Request;
 using Bie.Business.Models;
 
 namespace Bie.Api.Configuration.Mappings;

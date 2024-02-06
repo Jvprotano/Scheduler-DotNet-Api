@@ -62,6 +62,8 @@
 /home/jvprotano/Workspace/BookItEasy/SchedulerBackend/src/Bie.Api/bin/Debug/net8.0/Bie.Api.pdb
 /home/jvprotano/Workspace/BookItEasy/SchedulerBackend/src/Bie.Api/bin/Debug/net8.0/Asp.Versioning.Abstractions.dll
 /home/jvprotano/Workspace/BookItEasy/SchedulerBackend/src/Bie.Api/bin/Debug/net8.0/Asp.Versioning.Http.dll
+/home/jvprotano/Workspace/BookItEasy/SchedulerBackend/src/Bie.Api/bin/Debug/net8.0/Asp.Versioning.Mvc.dll
+/home/jvprotano/Workspace/BookItEasy/SchedulerBackend/src/Bie.Api/bin/Debug/net8.0/Asp.Versioning.Mvc.ApiExplorer.dll
 /home/jvprotano/Workspace/BookItEasy/SchedulerBackend/src/Bie.Api/bin/Debug/net8.0/AutoMapper.dll
 /home/jvprotano/Workspace/BookItEasy/SchedulerBackend/src/Bie.Api/bin/Debug/net8.0/AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 /home/jvprotano/Workspace/BookItEasy/SchedulerBackend/src/Bie.Api/bin/Debug/net8.0/Azure.Core.dll
@@ -209,5 +211,3 @@
 /home/jvprotano/Workspace/BookItEasy/SchedulerBackend/src/Bie.Api/obj/Debug/net8.0/Bie.Api.pdb
 /home/jvprotano/Workspace/BookItEasy/SchedulerBackend/src/Bie.Api/obj/Debug/net8.0/Bie.Api.genruntimeconfig.cache
 /home/jvprotano/Workspace/BookItEasy/SchedulerBackend/src/Bie.Api/obj/Debug/net8.0/ref/Bie.Api.dll
-/home/jvprotano/Workspace/BookItEasy/SchedulerBackend/src/Bie.Api/bin/Debug/net8.0/Asp.Versioning.Mvc.dll
-/home/jvprotano/Workspace/BookItEasy/SchedulerBackend/src/Bie.Api/bin/Debug/net8.0/Asp.Versioning.Mvc.ApiExplorer.dll
