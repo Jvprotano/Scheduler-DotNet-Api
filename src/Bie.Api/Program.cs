@@ -77,7 +77,7 @@ builder.Services.AddSwaggerGen(
                     Id = "Bearer"
                 }
             },
-            Array.Empty<string>()
+            new List<string>()
         }
     });
     });

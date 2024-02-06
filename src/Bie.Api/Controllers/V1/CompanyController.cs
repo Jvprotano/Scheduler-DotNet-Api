@@ -11,7 +11,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Bie.Api.Controllers.V1;
 
-[Authorize]
+// jv - verificar - remove in production
+// [Authorize]
 [Route("api/v{version:apiVersion}/[controller]")]
 public class CompanyController : BaseController
 {
