@@ -41,7 +41,7 @@ public class Repository<T> : IRepository<T> where T : EntityBase
             if (!active)
                 query = query.IgnoreQueryFilters();
 
-            return await query.FirstOrDefaultAsync(e => e.GetType().GetProperty("Id").GetValue(e) == id);
+            return await query.FirstOrDefaultAsync(e => e.Id == id);
         }
         catch (Exception ex)
         {

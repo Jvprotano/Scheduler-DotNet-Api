@@ -1,4 +1,5 @@
 using Asp.Versioning;
+
 using Bie.Api.DTOs.Response;
 
 using Microsoft.AspNetCore.Mvc;
@@ -16,28 +17,27 @@ public abstract class BaseController : ControllerBase
 
     }
 
-    protected IActionResult SuccessResponse(object data, string message = "")
+    protected IActionResult SuccessResponse(object data, string message = "", HttpStatusCode status = HttpStatusCode.OK)
     {
         var response = new ApiResponse
         {
             Success = true,
             Data = data,
-            Status = (int)HttpStatusCode.OK,
+            Status = (int)status,
             Message = message
         };
 
         return Ok(response);
     }
-    protected IActionResult ErrorResponse(string message = "")
+    protected IActionResult ErrorResponse(string message = "", HttpStatusCode status = HttpStatusCode.BadRequest)
     {
         var error = new ApiResponse
         {
             Success = false,
-            Status = (int)HttpStatusCode.BadRequest,
+            Status = (int)status,
             Message = message
         };
 
-        return BadRequest(error);
+        return StatusCode((int)status, error);
     }
-
 }

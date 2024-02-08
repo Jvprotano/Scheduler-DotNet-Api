@@ -6,8 +6,8 @@ namespace Bie.Business.Models;
 [Table("companies_owners")]
 public class CompanyOwners : EntityBase
 {
-    public string CompanyId { get; set; }
-    public Company Company { get; set; }
-    public string UserId { get; set; }
-    public ApplicationUser User { get; set; }
+    public string CompanyId { get; set; } = string.Empty;
+    public Company? Company { get; set; }
+    public string UserId { get; set; } = string.Empty;
+    public ApplicationUser? User { get; set; }
 }

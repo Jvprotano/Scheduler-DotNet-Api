@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Bie.Data")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d1dbac7701f69aea1752b1de6ea5581a332823de")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0a3eb96a3aa998d5690c60f2f053d3557fc097e2")]
 [assembly: System.Reflection.AssemblyProductAttribute("Bie.Data")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Bie.Data")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

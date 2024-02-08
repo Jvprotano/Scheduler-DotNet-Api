@@ -11,9 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Bie.Api.Controllers.V1;
 
-// jv - verificar - remove in production
-// [Authorize]
-
+[Authorize]
 [Route("api/v{version:apiVersion}/[controller]")]
 public class CompanyController : BaseController
 {
@@ -90,18 +88,9 @@ public class CompanyController : BaseController
     [HttpGet]
     public async Task<IActionResult> Get(string id)
     {
-        var companyTest = new CompanyResponseDto()
-        {
-            Id = "abcId",
-            Name = "Cartucho",
-            Description = "Descrição"
-
-        };
-        return this.SuccessResponse(companyTest);
-
         var model = _mapper.Map<CompanyResponseDto>(await _companyService.GetByIdAsync(id));
 
-        return Ok(model);
+        return SuccessResponse(model);
     }
     [HttpGet]
     [Route("GetByUserId")]

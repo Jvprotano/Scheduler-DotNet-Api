@@ -42,11 +42,11 @@ public class SchedulingService : Service<Scheduling>, ISchedulingService
         return await _repositoryScheduling.GetAllOpenByCompanyIdAsync(companyId, initialDate, finalDate);
     }
 
-    public async Task<IEnumerable<TimeSpan>> GetAvailableTimesAsync(string companyId, string? serviceSelected, DateOnly date)
+    public async Task<IEnumerable<TimeSpan>> GetAvailableTimesAsync(string companyId, string serviceSelected, DateOnly date)
     {
         List<CompanyOpeningHours> openingHours = _repositoryCompanyOpeningHours.GetByDayOfWeek(companyId, date.DayOfWeek);
 
-        List<TimeSpan> availableTimes = new List<TimeSpan>();
+        List<TimeSpan> availableTimes = new();
 
         if (openingHours.Count > 0)
         {

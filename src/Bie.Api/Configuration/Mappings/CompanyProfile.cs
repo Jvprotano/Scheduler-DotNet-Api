@@ -1,6 +1,4 @@
 using AutoMapper;
-
-using Bie.Api.DTOs;
 using Bie.Api.DTOs.Request;
 using Bie.Api.DTOs.Response;
 using Bie.Business.Models;

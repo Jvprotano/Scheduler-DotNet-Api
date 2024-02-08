@@ -7,7 +7,7 @@ public abstract class ProfileBase : EntityBase
     public string Name { get; set; }
     [Required]
     public string Email { get; set; }
-    public string? CityId { get; set; }
+    public string CityId { get; set; }
     public City City { get; set; }
     public string Address { get; set; }
     public string AddressNumber { get; set; }

@@ -2,6 +2,7 @@ using AutoMapper;
 
 using Bie.Api.Controllers.V1.Base;
 using Bie.Api.DTOs.Response;
+using Bie.Business.Interfaces.Services;
 using Bie.Business.Models;
 
 using Microsoft.AspNetCore.Authorization;
@@ -16,11 +17,13 @@ public class UserController : BaseController
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IMapper _mapper;
+    private readonly IUserService _userService;
 
-    public UserController(UserManager<ApplicationUser> userManager, IMapper mapper)
+    public UserController(UserManager<ApplicationUser> userManager, IMapper mapper, IUserService userService)
     {
         _userManager = userManager;
         _mapper = mapper;
+        _userService = userService;
     }
 
     [HttpGet("{id}")]
@@ -37,11 +40,17 @@ public class UserController : BaseController
     }
 
     [HttpPut]
-    public async Task<IActionResult> Put()
+    public async Task<IActionResult> Put([FromBody] UserResponseDto user)
     {
         try
         {
-            throw new NotImplementedException();
+            ApplicationUser applicationUser = _mapper.Map<ApplicationUser>(user);
+            IdentityResult result = await _userService.UpdateAsync(applicationUser);
+
+            if (!result.Succeeded)
+                return BadRequest(new { errors = result.Errors });
+
+            return SuccessResponse(data: new { }, status: System.Net.HttpStatusCode.NoContent);
         }
         catch (Exception ex)
         {

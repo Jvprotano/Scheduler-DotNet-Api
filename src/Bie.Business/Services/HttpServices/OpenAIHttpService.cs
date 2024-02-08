@@ -8,8 +8,8 @@ using System.Net.Http.Json;
 namespace Bie.Business.Services.HttpServices;
 public class OpenAIHttpService : IOpenAIProxy
 {
-    readonly string? _apiKey;
-    readonly string? _httpClient;
+    readonly string _apiKey;
+    readonly string _httpClient;
 
     public OpenAIHttpService(IConfiguration configuration)
     {
@@ -20,15 +20,15 @@ public class OpenAIHttpService : IOpenAIProxy
 
     public async Task<GenerateImageResponse> GenerateImages(GenerateImageRequest prompt, CancellationToken cancellation = default)
     {
-        string? url = _httpClient;
-        string? bearerToken = _apiKey;
-        string? body = $"{{\"prompt\": \"{prompt.Prompt}\", \"model\": \"{prompt.Model}\", \"response_format\": \"{prompt.ResponseFormat}\"}}";
+        string url = _httpClient;
+        string bearerToken = _apiKey;
+        string body = $"{{\"prompt\": \"{prompt.Prompt}\", \"model\": \"{prompt.Model}\", \"response_format\": \"{prompt.ResponseFormat}\"}}";
 
         // Prepare data for the POST request
         var data = new StringContent(body, Encoding.UTF8, "application/json");
 
         // Create HttpClient instance
-        using HttpClient client = new HttpClient();
+        using HttpClient client = new();
         // Set authentication header
         if (bearerToken != null)
         {

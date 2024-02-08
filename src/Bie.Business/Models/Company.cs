@@ -9,7 +9,7 @@ namespace Bie.Business.Models;
 public class Company : ProfileBase
 {
     [Required]
-    public string? Description { get; set; }
+    public string Description { get; set; } = string.Empty;
     public string? Cnpj { get; set; }
     public bool IsVirtual { get; set; }
     public ScheduleStatusEnum ScheduleStatus { get; set; }

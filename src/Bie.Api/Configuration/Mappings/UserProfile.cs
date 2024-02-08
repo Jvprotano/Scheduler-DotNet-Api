@@ -11,7 +11,13 @@ public class UserProfile : Profile
     public UserProfile()
     {
         CreateMap<UserResponseDto, ApplicationUser>();
-        CreateMap<RegisterDto, ApplicationUser>();
+
+        CreateMap<RegisterDto, ApplicationUser>()
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => Business.Enums.StatusEnum.Active));
+
         CreateMap<LoginDto, ApplicationUser>();
+        CreateMap<ApplicationUser, UserResponseDto>();
+
+        CreateMap<UserRequestDto, ApplicationUser>();
     }
 }

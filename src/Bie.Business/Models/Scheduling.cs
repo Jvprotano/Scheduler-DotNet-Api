@@ -1,16 +1,19 @@
 using Bie.Business.Models.Base;
-
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Bie.Business.Models;
 [Table("schedulings")]
 public class Scheduling : EntityBase
 {
-    public string CompanyId { get; set; }
-    public Company Company { get; set; }
-    public string CustomerId { get; set; }
-    public ApplicationUser Customer { get; set; }
+    [Required]
+    public string CompanyId { get; set; } = string.Empty;
+    public Company? Company { get; set; }
+    [Required]
+    public string CustomerId { get; set; } = string.Empty;
+    public ApplicationUser? Customer { get; set; }
     public DateTime ScheduledDate { get; set; }
-    public string ServicesOfferedId { get; set; }
-    public CompanyServiceOffered ServiceOffered { get; set; }
+    [Required]
+    public string ServicesOfferedId { get; set; } = string.Empty;
+    public CompanyServiceOffered? ServiceOffered { get; set; }
 }
