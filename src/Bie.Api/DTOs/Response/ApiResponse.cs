@@ -5,4 +5,5 @@ public class ApiResponse
     public object Data { get; set; } = new();
     public int Status { get; set; }
     public string Message { get; set; } = "";
+    public string Error { get; set; } = "";
 }

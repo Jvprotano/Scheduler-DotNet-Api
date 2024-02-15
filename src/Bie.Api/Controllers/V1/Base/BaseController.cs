@@ -29,13 +29,13 @@ public abstract class BaseController : ControllerBase
 
         return Ok(response);
     }
-    protected IActionResult ErrorResponse(string message = "", HttpStatusCode status = HttpStatusCode.BadRequest)
+    protected IActionResult ErrorResponse(string error = "", HttpStatusCode status = HttpStatusCode.BadRequest)
     {
         var error = new ApiResponse
         {
             Success = false,
             Status = (int)status,
-            Message = message
+            Error = error
         };
 
         return StatusCode((int)status, error);
