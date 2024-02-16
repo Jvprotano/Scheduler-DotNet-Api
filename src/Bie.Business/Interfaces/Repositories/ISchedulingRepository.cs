@@ -5,5 +5,5 @@ namespace Bie.Business.Interfaces.Repositories;
 public interface ISchedulingRepository : IRepository<Scheduling>
 {
     Task<IEnumerable<Scheduling>> GetAllByDateAsync(string companyId, DateOnly date);
-    Task<IEnumerable<Scheduling>> GetAllOpenByCompanyIdAsync(string companyId, DateTime initialDate, DateTime finalDate);
+    Task<IEnumerable<Scheduling>> GetAllOpenByCompanyIdAsync(string companyId, DateOnly initialDate, DateOnly finalDate);
 }

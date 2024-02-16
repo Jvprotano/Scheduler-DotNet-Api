@@ -9,6 +9,6 @@ public class CompanyOpeningHours : EntityBase
     public string CompanyId { get; set; } = string.Empty;
     public Company? Company { get; set; }
     public DayOfWeek DayOfWeek { get; set; }
-    public TimeSpan OpeningHour { get; set; }
-    public TimeSpan ClosingHour { get; set; }
+    public TimeOnly OpeningHour { get; set; }
+    public TimeOnly ClosingHour { get; set; }
 }

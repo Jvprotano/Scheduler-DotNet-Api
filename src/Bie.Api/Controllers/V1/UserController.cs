@@ -1,6 +1,7 @@
 using AutoMapper;
 
 using Bie.Api.Controllers.V1.Base;
+using Bie.Api.DTOs.Request;
 using Bie.Api.DTOs.Response;
 using Bie.Business.Interfaces.Services;
 using Bie.Business.Models;
@@ -27,6 +28,7 @@ public class UserController : BaseController
     }
 
     [HttpGet("{id}")]
+    [ProducesResponseType(typeof(UserResponseDto), 200)]
     public async Task<IActionResult> Get(string id)
     {
         var user = await _userManager.FindByIdAsync(id);
@@ -40,7 +42,8 @@ public class UserController : BaseController
     }
 
     [HttpPut]
-    public async Task<IActionResult> Put([FromBody] UserResponseDto user)
+    [ProducesResponseType(204)]
+    public async Task<IActionResult> Put([FromBody] UserRequestDto user)
     {
         try
         {
@@ -48,7 +51,7 @@ public class UserController : BaseController
             IdentityResult result = await _userService.UpdateAsync(applicationUser);
 
             if (!result.Succeeded)
-                return BadRequest(new { errors = result.Errors });
+                return ErrorResponse(result.Errors.ToString() ?? "");
 
             return SuccessResponse(data: new { }, status: System.Net.HttpStatusCode.NoContent);
         }

@@ -54,8 +54,8 @@ public class CompanyRequestDto : BaseDto
             new CompanyOpeningHours
             {
                 DayOfWeek = dayOfWeek,
-                OpeningHour = new TimeSpan(9, 0, 0),
-                ClosingHour = new TimeSpan(18, 0, 0)
+                OpeningHour = new TimeOnly(9, 0, 0),
+                ClosingHour = new TimeOnly(18, 0, 0)
             }));
 
         return defaultOpeningHours;

@@ -1,3 +1,4 @@
+using System.Net;
 using Bie.Business.Enums;
 using Bie.Business.Interfaces.HttpServices;
 using Bie.Business.Interfaces.Repositories;

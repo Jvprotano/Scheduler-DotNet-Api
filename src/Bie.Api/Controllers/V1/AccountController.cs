@@ -1,3 +1,4 @@
+using System.Data.Common;
 using AutoMapper;
 
 using Bie.Api.Controllers.V1.Base;
@@ -24,6 +25,8 @@ public class AccountController : BaseController
     }
     [HttpPost]
     [Route("login")]
+    [ProducesResponseType(typeof(object), 400)]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(object))]
     public async Task<IActionResult> Login([FromBody] LoginDto model)
     {
         ApplicationUser? user = await _authService.LoginAsync(model.EmailOrPhone, model.Password, model.RememberMe);
@@ -31,9 +34,9 @@ public class AccountController : BaseController
         if (user != null)
         {
             var token = _authService.GenerateToken(user);
-            return SuccessResponse(data: new { Bearer = token });
+            return SuccessResponse(data: new { Bearer = token, userName = user.UserName });
         }
-        return BadRequest("User not found or password is incorrect");
+        return ErrorResponse("User not found or password is incorrect");
     }
     [HttpPost]
     [Route("register")]
@@ -53,21 +56,19 @@ public class AccountController : BaseController
                 var user = await _authService.CreateAsync(_mappper.Map<ApplicationUser>(model), model.Password);
 
                 if (user != null)
-                {
-                    return Ok(new
-                    {
-                        success = true,
-                        data = new { userId = user.Id }
-                    });
-                }
-
-                ModelState.AddModelError(string.Empty, "User not created");
+                    SuccessResponse(user);
+                
+                ErrorResponse("User not created");
+            }
+            catch (DbException ex)
+            {
+                ErrorResponse(ex.Message, System.Net.HttpStatusCode.InternalServerError);
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError(string.Empty, ex.Message);
+                ErrorResponse(ex.Message);
             }
         }
-        return BadRequest(ModelState);
+        return ErrorResponse();
     }
 }

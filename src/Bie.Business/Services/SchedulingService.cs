@@ -22,8 +22,8 @@ public class SchedulingService : Service<Scheduling>, ISchedulingService
     {
         if (String.IsNullOrWhiteSpace(entity.CompanyId))
             throw new Exception("Company is required");
-        // if (String.IsNullOrWhiteSpace(entity.CustomerId))
-        //     throw new Exception("Customer is required");
+        if (String.IsNullOrWhiteSpace(entity.CustomerId))
+            throw new Exception("Customer is required");
         if (entity.ScheduledDate == default)
             throw new Exception("Scheduled date is required");
         if (String.IsNullOrWhiteSpace(entity.ServicesOfferedId))
@@ -37,31 +37,33 @@ public class SchedulingService : Service<Scheduling>, ISchedulingService
         return base.SaveAsync(entity);
     }
 
-    public async Task<IEnumerable<Scheduling>> GetAllOpenByCompanyIdAsync(string companyId, DateTime initialDate, DateTime finalDate)
+    public async Task<IEnumerable<Scheduling>> GetAllOpenByCompanyIdAsync(string companyId, DateOnly initialDate, DateOnly finalDate)
     {
         return await _repositoryScheduling.GetAllOpenByCompanyIdAsync(companyId, initialDate, finalDate);
     }
 
-    public async Task<IEnumerable<TimeSpan>> GetAvailableTimesAsync(string companyId, string serviceSelected, DateOnly date)
+    public async Task<IEnumerable<TimeOnly>> GetAvailableTimesAsync(string companyId, string serviceSelectedId, DateOnly date)
     {
         List<CompanyOpeningHours> openingHours = _repositoryCompanyOpeningHours.GetByDayOfWeek(companyId, date.DayOfWeek);
 
-        List<TimeSpan> availableTimes = new();
+        List<TimeOnly> availableTimes = new();
 
         if (openingHours.Count > 0)
         {
             Company company = await _serviceCompany.GetByIdAsync(companyId);
 
-            CompanyServiceOffered? serviceOffered = company.ServicesOffered.Where(c => c.Id == serviceSelected).FirstOrDefault();
+            CompanyServiceOffered? serviceOffered = company.ServicesOffered.Where(c => c.Id == serviceSelectedId).FirstOrDefault();
 
-            // var shortestServiceDuration = company.ServicesOffered.Where(c => c.Duration > new TimeSpan()).Select(c => c.Duration).Min();
+            if (serviceOffered == null)
+                throw new ArgumentNullException("Service not found");
+            // var shortestServiceDuration = company.ServicesOffered.Where(c => c.Duration > new TimeOnly()).Select(c => c.Duration).Min();
             // if (shortestServiceDuration == default)
             //     throw new Exception("Não há serviços cadastrados");
 
-            var shortestServiceDuration = new TimeSpan(0, 10, 0);
+            var shortestServiceDuration = new TimeOnly(0, 10, 0);
 
             if (date == DateOnly.FromDateTime(DateTime.Now))
-                openingHours.RemoveAll(c => c.OpeningHour < DateTime.Now.TimeOfDay && c.ClosingHour < DateTime.Now.TimeOfDay);
+                openingHours.RemoveAll(c => c.OpeningHour < TimeOnly.FromDateTime(DateTime.Now) && c.ClosingHour < TimeOnly.FromDateTime(DateTime.Now));
 
             foreach (var item in openingHours)
             {
@@ -70,30 +72,30 @@ public class SchedulingService : Service<Scheduling>, ISchedulingService
                 if (item.OpeningHour > item.ClosingHour)
                     throw new Exception("Opening hour cannot be greater than closing hour");
 
-                if (date == DateOnly.FromDateTime(DateTime.Now) && item.OpeningHour < DateTime.Now.TimeOfDay)
-                    item.OpeningHour = DateTime.Now.TimeOfDay;
+                if (date == DateOnly.FromDateTime(DateTime.Now) && item.OpeningHour < TimeOnly.FromDateTime(DateTime.Now))
+                    item.OpeningHour = TimeOnly.FromDateTime(DateTime.Now);
 
                 var opening = item.OpeningHour;
                 var closing = item.ClosingHour;
 
-                while (opening <= closing - serviceOffered?.Duration)
+                while (opening <= TimeOnly.FromTimeSpan(closing - serviceOffered.Duration))
                 {
                     availableTimes.Add(opening);
-                    opening = opening.Add(shortestServiceDuration);
+                    opening = opening.Add(shortestServiceDuration.ToTimeSpan());
                 }
             }
 
             List<Scheduling> busyTimes = (await _repositoryScheduling.GetAllByDateAsync(companyId, date)).ToList();
 
             if (date == DateOnly.FromDateTime(DateTime.Now))
-                availableTimes.RemoveAll(c => c < DateTime.Now.TimeOfDay);
+                availableTimes.RemoveAll(c => c < TimeOnly.FromDateTime(DateTime.Now));
 
             foreach (var item in busyTimes)
             {
-                var scheduledHour = item.ScheduledDate.TimeOfDay;
-                var scheduledDuration = item.ServiceOffered.Duration;
+                var scheduledHour = item.ScheduledTime;
+                var scheduledDuration = item.ServiceOffered?.Duration;
 
-                TimeSpan finalBusyTime = scheduledHour.Add(scheduledDuration);
+                TimeOnly finalBusyTime = scheduledHour.Add(scheduledDuration.GetValueOrDefault().ToTimeSpan());
 
                 availableTimes.RemoveAll(c => c >= scheduledHour && c <= finalBusyTime);
             }

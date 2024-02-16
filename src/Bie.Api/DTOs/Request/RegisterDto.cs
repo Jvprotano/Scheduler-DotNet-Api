@@ -9,7 +9,7 @@ public class RegisterDto
     public string LastName { get; set; } = string.Empty;
     public string? Phone { get; set; }
     [Required(ErrorMessage = "Birth Date is required")]
-    public DateTime BirthDate { get; set; }
+    public DateOnly BirthDate { get; set; }
     [Required(ErrorMessage = "Email is required")]
     public string Email { get; set; } = string.Empty;
     [MinLength(8)]

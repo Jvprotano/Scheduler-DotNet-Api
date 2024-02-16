@@ -1,3 +1,4 @@
+using System.Net.Mime;
 using Bie.Business.Models;
 using Bie.Business.Models.Base;
 using Bie.Data.Context.Extensions;
@@ -12,7 +13,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public ApplicationDbContext(DbContextOptions options) : base(options)
     {
     }
-    
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);

@@ -12,9 +12,9 @@ public class OpenAIService : IOpenAIService
         var config = BuildConfig();
         IOpenAIProxy aiClient = new OpenAIHttpService(config);
 
-        var nImages = int.Parse(config["OpenAi:DALL-E:N"]);
+        var nImages = int.Parse(config["OpenAi:DALL-E:N"] ?? "1");
         var imageSize = config["OpenAi:DALL-E:Size"];
-        var prompt = new GenerateImageRequest(userPrompt, nImages, imageSize);
+        var prompt = new GenerateImageRequest(userPrompt, nImages, imageSize ?? "256");
 
         var result = await aiClient.GenerateImages(prompt);
 

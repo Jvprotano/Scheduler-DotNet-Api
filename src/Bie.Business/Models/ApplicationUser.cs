@@ -1,8 +1,10 @@
+using Bie.Business.Enums;
+using Bie.Business.Services;
+using Microsoft.AspNetCore.Identity;
+
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Bie.Business.Enums;
-using Microsoft.AspNetCore.Identity;
 
 namespace Bie.Business.Models;
 
@@ -22,7 +24,8 @@ public class ApplicationUser : IdentityUser
     public string? ImageBase64 { get; set; }
 
     public IList<Scheduling>? Schedulings { get; set; }
-    public IList<CompanyOwners>? UserCompanies { get; set; }
+    public IList<CompanyEmployeer>? UserCompanies { get; set; }
     [NotMapped]
     public IList<Company>? Companies { get; set; }
+    public List<EmployeeServiceLink> Services { get; set; } = new();
 }

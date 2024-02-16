@@ -3,7 +3,7 @@ public class SchedulingRequestDto
 {
     public int CompanyId { get; set; }
     public int CustomerId { get; set; }
-    public string ServiceSelectedId { get; set; }
-    public DateTime ScheduledDate { get; set; }
-    public string TimeSelected { get; set; }
+    public string ServiceId { get; set; } = string.Empty;
+    public DateOnly ScheduledDate { get; set; }
+    public TimeOnly TimeSelected { get; set; }
 }

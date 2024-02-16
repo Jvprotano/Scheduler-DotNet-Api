@@ -13,8 +13,8 @@ public class ImageUploadService : IImageUploadService
 
     public ImageUploadService(IConfiguration configuration)
     {
-        _azureStorage = configuration["AzureCfg:StorageCfg"];
-        _azureContainer = configuration["AzureCfg:Container"];
+        _azureStorage = configuration["AzureCfg:StorageCfg"] ?? throw new ArgumentException(nameof(configuration));
+        _azureContainer = configuration["AzureCfg:Container"] ?? throw new ArgumentException(nameof(configuration));
     }
 
     public async Task<string> UploadImage(string imageBase64)

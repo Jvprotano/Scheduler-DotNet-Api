@@ -25,9 +25,9 @@ public class SchedulingController : BaseController
     {
         try
         {
-            if (String.IsNullOrWhiteSpace(model.TimeSelected))
+            if (model.TimeSelected == default)
                 throw new Exception("Time is required");
-            if (String.IsNullOrWhiteSpace(model.ServiceSelectedId))
+            if (String.IsNullOrWhiteSpace(model.ServiceId))
                 throw new Exception("Service is required");
             if (model.ScheduledDate == default)
                 throw new Exception("Date is required");
@@ -50,7 +50,7 @@ public class SchedulingController : BaseController
     {
         try
         {
-            List<TimeSpan> listTimes = (await _serviceScheduling.GetAvailableTimesAsync(companyId, serviceSelected, dateSelected)).ToList();
+            List<TimeOnly> listTimes = (await _serviceScheduling.GetAvailableTimesAsync(companyId, serviceSelected, dateSelected)).ToList();
 
             return SuccessResponse(listTimes);
         }

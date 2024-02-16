@@ -15,16 +15,17 @@ public class SchedulingRepository : Repository<Scheduling>, ISchedulingRepositor
     public async Task<IEnumerable<Scheduling>> GetAllByDateAsync(string companyId, DateOnly date)
     {
         return await DbSet.Where(c => c.CompanyId == companyId &&
-            c.ScheduledDate.Date == date.ToDateTime(TimeOnly.Parse("10:00 PM")).Date)
+            c.ScheduledDate == date)
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<Scheduling>> GetAllOpenByCompanyIdAsync(string companyId, DateTime initialDate, DateTime finalDate)
+    public async Task<IEnumerable<Scheduling>> GetAllOpenByCompanyIdAsync(string companyId, DateOnly initialDate, DateOnly finalDate)
     {
         return await this.DbSet
         .Include(c => c.ServiceOffered)
         .Include(c => c.Customer)
-        .Where(c => c.CompanyId == companyId && c.ScheduledDate.Date >= initialDate.Date && c.ScheduledDate.Date <= finalDate.Date)
+        .Where(c => c.CompanyId == companyId && c.ScheduledDate >= initialDate &&
+                    c.ScheduledDate <= finalDate)
         .OrderBy(c => c.ScheduledDate)
         .ToListAsync();
     }

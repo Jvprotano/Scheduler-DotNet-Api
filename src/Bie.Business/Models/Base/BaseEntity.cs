@@ -4,7 +4,7 @@ using Bie.Business.Enums;
 namespace Bie.Business.Models.Base;
 public abstract class EntityBase
 {
-    public string Id { get; set; }
+    public string Id { get; set; } = Guid.NewGuid().ToString();
     [Required]
     public StatusEnum? Status { get; set; }
     [Required]

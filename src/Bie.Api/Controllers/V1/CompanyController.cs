@@ -37,7 +37,7 @@ public class CompanyController : BaseController
         }
         catch (Exception ex)
         {
-            return NotFound(ex.Message);
+            return ErrorResponse(ex.Message);
         }
     }
 
@@ -54,7 +54,7 @@ public class CompanyController : BaseController
         }
         catch (Exception ex)
         {
-            return NotFound(ex.Message);
+            return ErrorResponse(ex.Message);
         }
     }
     [HttpDelete("{id:int}")]
@@ -68,7 +68,7 @@ public class CompanyController : BaseController
         }
         catch (Exception ex)
         {
-            return NotFound(ex.Message);
+            return ErrorResponse(ex.Message);
         }
     }
     [Route("Reactive")]
@@ -78,14 +78,15 @@ public class CompanyController : BaseController
         try
         {
             await _companyService.ReactiveAsync(id);
-            return Ok();
+            return SuccessResponse(new object());
         }
         catch (Exception ex)
         {
-            return NotFound(ex.Message);
+            return ErrorResponse(ex.Message);
         }
     }
     [HttpGet]
+    [ProducesResponseType(typeof(CompanyResponseDto), 200)]
     public async Task<IActionResult> Get(string id)
     {
         var model = _mapper.Map<CompanyResponseDto>(await _companyService.GetByIdAsync(id));
@@ -94,6 +95,7 @@ public class CompanyController : BaseController
     }
     [HttpGet]
     [Route("GetByUserId")]
+    [ProducesResponseType(typeof(List<CompanyResponseDto>), 200)]
     public async Task<IActionResult> GetByUserId(string userId)
     {
         if (userId != null)

@@ -22,6 +22,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 
+builder.Services.AddCors(opt=>{
+    opt.AddPolicy("AllowLocalhost",
+        builder =>
+        {
+            builder.WithOrigins("http://localhost:4200")
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+        });
+});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAutoMapper(typeof(Program));
@@ -97,7 +106,7 @@ builder.Services.AddAuthentication(opt =>
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Issuer"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? ""))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
         };
     });
 
@@ -113,9 +122,7 @@ builder.Services.AddRepositories();
 
 var app = builder.Build();
 
-
-// if (app.Environment.IsDevelopment())
-// {
+app.UseCors("AllowLocalhost");
 
 app.UseSwagger();
 app.UseSwaggerUI(
@@ -131,9 +138,8 @@ app.UseSwaggerUI(
         }
     });
 
-// }
 
-// app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();

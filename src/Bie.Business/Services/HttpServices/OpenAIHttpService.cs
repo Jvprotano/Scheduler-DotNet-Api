@@ -1,9 +1,11 @@
 using Bie.Business.Interfaces.HttpServices;
+
+using Microsoft.Extensions.Configuration;
+
 using System.Net;
 using System.Net.Http.Headers;
-using System.Text;
-using Microsoft.Extensions.Configuration;
 using System.Net.Http.Json;
+using System.Text;
 
 namespace Bie.Business.Services.HttpServices;
 public class OpenAIHttpService : IOpenAIProxy
@@ -15,7 +17,7 @@ public class OpenAIHttpService : IOpenAIProxy
     {
         //👇 reading settings from the configuration file
         _httpClient = configuration["OpenAi:Url"] ?? throw new ArgumentException(nameof(configuration));
-        _apiKey = configuration["OpenAi:ApiKey"];
+        _apiKey = configuration["OpenAi:ApiKey"] ?? "";
     }
 
     public async Task<GenerateImageResponse> GenerateImages(GenerateImageRequest prompt, CancellationToken cancellation = default)
@@ -31,9 +33,7 @@ public class OpenAIHttpService : IOpenAIProxy
         using HttpClient client = new();
         // Set authentication header
         if (bearerToken != null)
-        {
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bearerToken);
-        }
 
         // Perform request
         try
@@ -52,12 +52,13 @@ public class OpenAIHttpService : IOpenAIProxy
             else
             {
                 Console.WriteLine($"Error: {response.StatusCode}");
+                throw new HttpRequestException($"Error: {response.StatusCode}");
             }
         }
         catch (HttpRequestException ex)
         {
             Console.WriteLine($"Error: {ex.Message}");
+            throw new HttpRequestException($"Error: {ex.Message}");
         }
-        return null;
     }
 }

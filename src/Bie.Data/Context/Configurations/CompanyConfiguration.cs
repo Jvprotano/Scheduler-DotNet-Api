@@ -10,7 +10,7 @@ public class CompanyConfiguration : ProfileBaseConfiguration<Company>
     {
         base.Configure(builder);
 
-        builder.HasMany(c => c.Owners)
+        builder.HasMany(c => c.Employeers)
             .WithOne(c => c.Company)
             .HasForeignKey(c => c.CompanyId);
 

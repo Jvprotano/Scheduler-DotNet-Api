@@ -7,21 +7,19 @@ namespace Bie.Api.DTOs.Response;
 public class CompanyResponseDto : BaseDto
 {
     [Display(Name = "Name")]
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
     [Display(Name = "Email")]
     [EmailAddress]
-    public string Email { get; set; }
-    public string Description { get; set; }
+    public string Email { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
     [Display(Name = "CNPJ")]
-    public string Cnpj { get; set; }
-    [Display(Name = "City")]
-    public int? CityId { get; set; }
-    public string Address { get; set; }
+    public string Cnpj { get; set; } = string.Empty;
+    public string Address { get; set; } = string.Empty;
     [Display(Name = "Number")]
-    public string AddressNumber { get; set; }
-    public string PostalCode { get; set; }
+    public string AddressNumber { get; set; } = string.Empty;
+    public string PostalCode { get; set; } = string.Empty;
     [Display(Name = "Is not a physical location")]
     public bool IsVirtual { get; set; }
-    public string ImageUrl { get; set; }
+    public string ImageUrl { get; set; } = string.Empty;
     public ScheduleStatusEnum ScheduleStatus { get; set; }
 }

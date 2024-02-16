@@ -54,8 +54,8 @@ public class CompanyRepository : Repository<Company>, ICompanyRepository
     {
         return await DbSet
             .IgnoreQueryFilters()
-            .Include(c => c.Owners)
-            .Where(c => c.Owners.Any(c => c.UserId == userId) && c.Status != StatusEnum.Removed)
+            .Include(c => c.Employeers)
+            .Where(c => c.Employeers.Any(c => c.UserId == userId) && c.Status != StatusEnum.Removed)
             .OrderBy(c => c.Status == StatusEnum.Active).ThenBy(c => c.Name)
             .ToListAsync();
     }
@@ -65,6 +65,7 @@ public class CompanyRepository : Repository<Company>, ICompanyRepository
         var entity = await GetAsync(id);
         entity.ScheduleStatus = ScheduleStatusEnum.Closed;
         entity.Status = StatusEnum.TemporaryRemoved;
+        entity.InactiveDate = DateTime.Now;
 
         await base.TemporaryDeleteAsync(entity);
     }
@@ -81,6 +82,8 @@ public class CompanyRepository : Repository<Company>, ICompanyRepository
         var company = await GetAsync(id, active: false);
         company.Status = StatusEnum.Active;
         company.ScheduleStatus = ScheduleStatusEnum.Closed;
+        company.InactiveDate = null;
+        
         await base.SaveAsync(company);
     }
 }
