@@ -53,11 +53,12 @@ public class AccountController : BaseController
         {
             try
             {
-                var user = await _authService.CreateAsync(_mappper.Map<ApplicationUser>(model), model.Password);
+                var appUser = _mappper.Map<ApplicationUser>(model);
+                var user = await _authService.CreateAsync(appUser, model.Password);
 
                 if (user != null)
-                    SuccessResponse(user);
-                
+                    SuccessResponse(new object());
+
                 ErrorResponse("User not created");
             }
             catch (DbException ex)
