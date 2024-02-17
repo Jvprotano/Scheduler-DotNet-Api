@@ -1,3 +1,5 @@
+using System.Data.Common;
+using System.Net;
 using AutoMapper;
 
 using Bie.Api.Controllers.V1.Base;
@@ -33,7 +35,7 @@ public class CompanyController : BaseController
 
             await _companyService.SaveAsync(company);
 
-            return Ok(company);
+            return SuccessResponse(new { }, "Created successfuly.");
         }
         catch (Exception ex)
         {
@@ -46,11 +48,20 @@ public class CompanyController : BaseController
     {
         try
         {
+            if (model == null)
+                throw new ArgumentNullException("Company not found");
+            if (model.Id == null || model.Id == default)
+                throw new ArgumentNullException("Existing company must be informed");
+
             var company = _mapper.Map<Company>(model);
 
             await _companyService.SaveAsync(company);
 
-            return Ok(company);
+            return SuccessResponse(new { }, "Updated successfuly.");
+        }
+        catch (ArgumentNullException ex)
+        {
+            return ErrorResponse(ex.Message, HttpStatusCode.BadRequest);
         }
         catch (Exception ex)
         {
@@ -64,7 +75,7 @@ public class CompanyController : BaseController
         {
             await _companyService.TemporaryDeleteAsync(id);
 
-            return Ok();
+            return SuccessResponse(new { }, "Deleted successfuly!");
         }
         catch (Exception ex)
         {
@@ -98,13 +109,22 @@ public class CompanyController : BaseController
     [ProducesResponseType(typeof(List<CompanyResponseDto>), 200)]
     public async Task<IActionResult> GetByUserId(string userId)
     {
-        if (userId != null)
+        try
         {
-            var companies = (await _companyService.GetCompaniesByUserAsync(userId)).ToList();
-            var model = _mapper.Map<List<CompanyResponseDto>>(companies);
-            return Ok(model);
-        }
+            if (userId == null)
+                throw new ArgumentNullException("User not found");
 
-        return NotFound();
+            var companies = (await _companyService.GetCompaniesByUserAsync(userId)).ToList();
+
+            if (companies == null || !companies.Any())
+                return SuccessResponse(new object());
+
+            var model = _mapper.Map<List<CompanyResponseDto>>(companies);
+            return SuccessResponse(model);
+        }
+        catch (DbException ex)
+        {
+            return ErrorResponse(ex.Message);
+        }
     }
 }

@@ -3,8 +3,8 @@ using Bie.Business.Models.Base;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Bie.Business.Models;
-[Table("companies_employeeers")]
-public class CompanyEmployeer : EntityBase
+[Table("companies_employees")]
+public class CompanyEmployee : EntityBase
 {
     public string CompanyId { get; set; } = string.Empty;
     public Company? Company { get; set; }

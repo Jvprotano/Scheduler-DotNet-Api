@@ -1,4 +1,5 @@
 using Bie.Api.Controllers.V1.Base;
+using Bie.Api.DTOs.Response;
 using Bie.Business.Enums;
 using Bie.Business.Interfaces.Services;
 
@@ -17,26 +18,44 @@ public class ScheduleController : BaseController
     }
     [HttpGet]
     [Route("Close")]
+    [ProducesResponseType(typeof(ApiResponse), 200)]
+    [ProducesResponseType(typeof(ApiResponse), 400)]
+
     public async Task<IActionResult> Close(string companyId)
     {
-        var company = await _companyService.GetByIdAsync(companyId);
+        try
+        {
+            var company = await _companyService.GetByIdAsync(companyId);
 
-        company.ScheduleStatus = ScheduleStatusEnum.Closed;
+            company.ScheduleStatus = ScheduleStatusEnum.Closed;
 
-        await _companyService.SaveAsync(company);
+            await _companyService.SaveAsync(company);
 
-        return Ok();
+            return SuccessResponse("Schedule closed successfully");
+        }
+        catch (Exception ex)
+        {
+            return ErrorResponse(ex.Message);
+        }
     }
     [HttpGet]
     [Route("Open/{companyId}")]
     public async Task<IActionResult> Open([FromRoute] string companyId)
     {
-        var company = await _companyService.GetByIdAsync(companyId);
+        try
+        {
+            var company = await _companyService.GetByIdAsync(companyId);
 
-        company.ScheduleStatus = ScheduleStatusEnum.Open;
+            company.ScheduleStatus = ScheduleStatusEnum.Open;
 
-        await _companyService.SaveAsync(company);
+            await _companyService.SaveAsync(company);
 
-        return Ok();
+            return SuccessResponse("Schedule opened successfully");
+        }
+        catch (Exception ex)
+        {
+            return ErrorResponse(ex.Message);
+        }
+
     }
 }

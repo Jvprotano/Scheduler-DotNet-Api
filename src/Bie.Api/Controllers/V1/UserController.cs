@@ -47,11 +47,14 @@ public class UserController : BaseController
     {
         try
         {
+            if (user == null || user.Id == default)
+                throw new ArgumentException("User must be informed.");
+
             ApplicationUser applicationUser = _mapper.Map<ApplicationUser>(user);
             IdentityResult result = await _userService.UpdateAsync(applicationUser);
 
             if (!result.Succeeded)
-                return ErrorResponse(result.Errors.ToString() ?? "");
+                return ErrorResponse(result.Errors.ToString() ?? "Unknow error");
 
             return SuccessResponse(data: new { }, status: System.Net.HttpStatusCode.NoContent);
         }

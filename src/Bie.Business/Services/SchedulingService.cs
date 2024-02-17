@@ -20,13 +20,13 @@ public class SchedulingService : Service<Scheduling>, ISchedulingService
     }
     public override void Validate(Scheduling entity)
     {
-        if (String.IsNullOrWhiteSpace(entity.CompanyId))
+        if (string.IsNullOrWhiteSpace(entity.CompanyId))
             throw new Exception("Company is required");
-        if (String.IsNullOrWhiteSpace(entity.CustomerId))
+        if (string.IsNullOrWhiteSpace(entity.CustomerId))
             throw new Exception("Customer is required");
         if (entity.ScheduledDate == default)
             throw new Exception("Scheduled date is required");
-        if (String.IsNullOrWhiteSpace(entity.ServicesOfferedId))
+        if (string.IsNullOrWhiteSpace(entity.ServicesOfferedId))
             throw new Exception("Service is required");
 
         base.Validate(entity);

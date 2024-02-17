@@ -32,7 +32,7 @@ public class Service<T> : IService<T> where T : EntityBase
         if (entity == null)
             throw new Exception("Entity is null");
 
-        if (String.IsNullOrWhiteSpace(entity.Id) || !Guid.TryParse(entity.Id, out _))
+        if (string.IsNullOrWhiteSpace(entity.Id) || !Guid.TryParse(entity.Id, out _))
             throw new Exception("Id is invalid");
     }
 }

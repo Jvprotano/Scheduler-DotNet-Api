@@ -1,4 +1,3 @@
-using System.Net.Mime;
 using Bie.Business.Models;
 using Bie.Business.Models.Base;
 using Bie.Data.Context.Extensions;

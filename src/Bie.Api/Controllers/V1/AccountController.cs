@@ -3,6 +3,7 @@ using AutoMapper;
 
 using Bie.Api.Controllers.V1.Base;
 using Bie.Api.DTOs.Request;
+using Bie.Api.DTOs.Response;
 using Bie.Business.Interfaces.Services;
 using Bie.Business.Models;
 
@@ -25,8 +26,9 @@ public class AccountController : BaseController
     }
     [HttpPost]
     [Route("login")]
-    [ProducesResponseType(typeof(object), 400)]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(object))]
+    [ProducesResponseType(typeof(ApiResponse), 400)]
+    [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
+
     public async Task<IActionResult> Login([FromBody] LoginDto model)
     {
         ApplicationUser? user = await _authService.LoginAsync(model.EmailOrPhone, model.Password, model.RememberMe);
@@ -34,7 +36,7 @@ public class AccountController : BaseController
         if (user != null)
         {
             var token = _authService.GenerateToken(user);
-            return SuccessResponse(data: new { Bearer = token, userName = user.UserName });
+            return Ok(new LoginResponse() { Bearer = token, UserName = user.UserName ?? user.Email ?? "" });
         }
         return ErrorResponse("User not found or password is incorrect");
     }
@@ -42,14 +44,16 @@ public class AccountController : BaseController
     [Route("register")]
     public async Task<IActionResult> Register([FromBody] RegisterDto model)
     {
-        if (await _authService.FindByEmailAsync(model.Email ?? "") != null)
-            ModelState.AddModelError(string.Empty, "Email already exists");
-        if (await _authService.FindByPhoneAsync(model.Phone ?? "") != null)
-            ModelState.AddModelError(string.Empty, "Phone already exists");
-        if (model.Password != model.ConfirmPassword)
-            ModelState.AddModelError(string.Empty, "Passwords don't match");
+        string[] errors = new string[] { };
 
-        if (ModelState.IsValid)
+        if (model.Password != model.ConfirmPassword)
+            errors.Append("Passwords don't match");
+        if (await _authService.FindByEmailAsync(model.Email ?? "") != null)
+            errors.Append("Email already exists");
+        if (await _authService.FindByPhoneAsync(model.Phone ?? "") != null)
+            errors.Append("Phone already exists");
+
+        if (!errors.Any())
         {
             try
             {
@@ -70,6 +74,6 @@ public class AccountController : BaseController
                 ErrorResponse(ex.Message);
             }
         }
-        return ErrorResponse();
+        return ErrorResponse(errors.ToString() ?? "Unknow error.");
     }
 }

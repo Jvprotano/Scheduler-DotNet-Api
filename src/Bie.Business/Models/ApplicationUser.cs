@@ -1,5 +1,4 @@
 using Bie.Business.Enums;
-using Bie.Business.Services;
 using Microsoft.AspNetCore.Identity;
 
 using System.ComponentModel;
@@ -24,7 +23,7 @@ public class ApplicationUser : IdentityUser
     public string? ImageBase64 { get; set; }
 
     public IList<Scheduling>? Schedulings { get; set; }
-    public IList<CompanyEmployeer>? UserCompanies { get; set; }
+    public IList<CompanyEmployee>? UserCompanies { get; set; }
     [NotMapped]
     public IList<Company>? Companies { get; set; }
     public List<EmployeeServiceLink> Services { get; set; } = new();

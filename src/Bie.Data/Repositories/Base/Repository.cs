@@ -1,3 +1,4 @@
+using System.Data.Common;
 using Bie.Business.Interfaces.Repositories.Base;
 using Bie.Business.Models.Base;
 using Bie.Data.Context;
@@ -52,7 +53,7 @@ public class Repository<T> : IRepository<T> where T : EntityBase
     {
         try
         {
-            if (String.IsNullOrWhiteSpace(entity.Id))
+            if (string.IsNullOrWhiteSpace(entity.Id))
             {
                 await DbSet.AddAsync(entity);
             }
@@ -63,9 +64,13 @@ public class Repository<T> : IRepository<T> where T : EntityBase
             }
             await _context.SaveChangesAsync();
         }
+        catch (DbException)
+        {
+            throw new Exception("Error on save entity");
+        }
         catch (Exception)
         {
-            throw;
+            throw new Exception("Unknown error on save entity");
         }
     }
     public virtual async Task TemporaryDeleteAsync(T entity)

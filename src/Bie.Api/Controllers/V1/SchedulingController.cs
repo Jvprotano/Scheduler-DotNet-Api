@@ -2,6 +2,7 @@ using AutoMapper;
 
 using Bie.Api.Controllers.V1.Base;
 using Bie.Api.DTOs.Request;
+using Bie.Api.DTOs.Response;
 using Bie.Business.Interfaces.Services;
 using Bie.Business.Models;
 
@@ -27,7 +28,7 @@ public class SchedulingController : BaseController
         {
             if (model.TimeSelected == default)
                 throw new Exception("Time is required");
-            if (String.IsNullOrWhiteSpace(model.ServiceId))
+            if (string.IsNullOrWhiteSpace(model.ServiceId))
                 throw new Exception("Service is required");
             if (model.ScheduledDate == default)
                 throw new Exception("Date is required");
@@ -38,19 +39,21 @@ public class SchedulingController : BaseController
         }
         catch (Exception ex)
         {
-            return this.ErrorResponse(ex.Message);
+            return ErrorResponse(ex.Message);
         }
 
         return SuccessResponse(model);
     }
 
-    [HttpPost]
+    [HttpGet]
     [Route("GetAvailableTimeSlots")]
-    public async Task<IActionResult> GetAvailableTimeSlots(string companyId, string serviceSelected, DateOnly dateSelected)
+    [ProducesResponseType(typeof(ApiResponse), 200)]
+    [ProducesResponseType(typeof(ApiResponse), 400)]
+    public async Task<IActionResult> GetAvailableTimeSlots(string companyId, string serviceSelectedId, DateOnly dateSelected)
     {
         try
         {
-            List<TimeOnly> listTimes = (await _serviceScheduling.GetAvailableTimesAsync(companyId, serviceSelected, dateSelected)).ToList();
+            List<TimeOnly> listTimes = (await _serviceScheduling.GetAvailableTimesAsync(companyId, serviceSelectedId, dateSelected)).ToList();
 
             return SuccessResponse(listTimes);
         }

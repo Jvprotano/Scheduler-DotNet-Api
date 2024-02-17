@@ -14,7 +14,7 @@ public class Company : ProfileBase
     public bool IsVirtual { get; set; }
     public DateTime? InactiveDate { get; set; }
     public ScheduleStatusEnum ScheduleStatus { get; set; }
-    public IList<CompanyEmployeer> Employeers { get; set; } = [];
+    public IList<CompanyEmployee> Employeers { get; set; } = [];
     public IList<CompanyCategory> Categories { get; set; } = [];
     public IList<CompanyServiceOffered> ServicesOffered { get; set; } = [];
     public virtual IList<CompanyOpeningHours> OpeningHours { get; set; } = [];

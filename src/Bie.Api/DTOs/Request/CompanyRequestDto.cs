@@ -1,8 +1,8 @@
 using Bie.Business.Enums;
-using Bie.Business.Models;
 using Bie.Api.DTOs.Base;
 
 using System.ComponentModel.DataAnnotations;
+using Bie.Business.Models;
 
 namespace Bie.Api.DTOs.Request;
 public class CompanyRequestDto : BaseDto
@@ -29,35 +29,7 @@ public class CompanyRequestDto : BaseDto
     public string? ImageUrl { get; set; }
     public ScheduleStatusEnum ScheduleStatus { get; set; }
 
-
-    // [Display(Name = "Services Offered")]
-    // public List<SelectListItem> CategoriesSelectIds { get; set; } = LoadCategories();
-    public List<CompanyOpeningHours> OpeningHours { get; set; } = LoadDefaultOpeningHours();
-    public List<CompanyServiceOffered> ServicesOffered { get; set; } = new List<CompanyServiceOffered>();
-
-
-
-    // private static List<SelectListItem> LoadCategories()
-    // {
-    //     List<SelectListItem> categories = new List<SelectListItem>();
-
-    //     Enum.GetValues(typeof(CategoryEnum)).Cast<CategoryEnum>().ToList().ForEach(category => categories.Add(
-    //         new SelectListItem(text: category.ToString(), value: ((int)category).ToString())));
-
-    //     return categories;
-    // }
-    public static List<CompanyOpeningHours> LoadDefaultOpeningHours()
-    {
-        List<CompanyOpeningHours> defaultOpeningHours = [];
-
-        Enum.GetValues(typeof(DayOfWeek)).Cast<DayOfWeek>().ToList().ForEach(dayOfWeek => defaultOpeningHours.Add(
-            new CompanyOpeningHours
-            {
-                DayOfWeek = dayOfWeek,
-                OpeningHour = new TimeOnly(9, 0, 0),
-                ClosingHour = new TimeOnly(18, 0, 0)
-            }));
-
-        return defaultOpeningHours;
-    }
+    public List<CompanyOpeningHoursRequestDto> OpeningHours { get; set; } = [];
+    public List<CompanyServiceOfferedRequestDto> ServicesOffered { get; set; } = [];
+    public List<CompanyEmployeeRequestDto> Employees { get; set; } = [];
 }

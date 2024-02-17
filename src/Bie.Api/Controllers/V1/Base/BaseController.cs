@@ -12,18 +12,13 @@ namespace Bie.Api.Controllers.V1.Base;
 [ApiController]
 public abstract class BaseController : ControllerBase
 {
-    public BaseController()
-    {
-
-    }
-
     protected IActionResult SuccessResponse(object data, string message = "", HttpStatusCode status = HttpStatusCode.OK)
     {
         var response = new ApiResponse
         {
             Success = true,
             Data = data,
-            Status = (int)status,
+            Status = status,
             Message = message
         };
 
@@ -34,8 +29,8 @@ public abstract class BaseController : ControllerBase
         var errorResponse = new ApiResponse
         {
             Success = false,
-            Status = (int)status,
-            Error = error
+            Status = status,
+            Message = error
         };
 
         return StatusCode((int)status, errorResponse);
