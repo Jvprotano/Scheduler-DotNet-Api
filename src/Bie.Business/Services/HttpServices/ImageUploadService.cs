@@ -20,8 +20,8 @@ public class ImageUploadService : IImageUploadService
     public async Task<string> UploadImage(string imageBase64)
     {
         string fileName = Guid.NewGuid().ToString() + ".jpg";
-        var data = new Regex(@"data:image\/[a-z]+;base64, ").Replace(imageBase64, "");
-
+        var data = new Regex(@"data:image\/[a-z]+;base64,").Replace(imageBase64, "");
+        
         byte[] bytes = Convert.FromBase64String(data);
 
         var blobClient = new BlobClient(_azureStorage, _azureContainer, fileName);

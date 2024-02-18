@@ -1,3 +1,4 @@
+using Bie.Business.Interfaces.HttpServices;
 using Bie.Business.Interfaces.Services;
 using Bie.Business.Models;
 
@@ -8,8 +9,19 @@ using Microsoft.Extensions.Options;
 namespace Bie.Business.Services;
 public class UserService : UserManager<ApplicationUser>, IUserService
 {
-    public UserService(IUserStore<ApplicationUser> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<ApplicationUser> passwordHasher, IEnumerable<IUserValidator<ApplicationUser>> userValidators, IEnumerable<IPasswordValidator<ApplicationUser>> passwordValidators, ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider services, ILogger<UserManager<ApplicationUser>> logger) : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
+    private readonly IImageUploadService _imageService;
+
+    public UserService(IUserStore<ApplicationUser> store,
+                       IOptions<IdentityOptions> optionsAccessor,
+                       IPasswordHasher<ApplicationUser> passwordHasher,
+                       IEnumerable<IUserValidator<ApplicationUser>> userValidators,
+                       IEnumerable<IPasswordValidator<ApplicationUser>> passwordValidators,
+                       ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors,
+                       IServiceProvider services, ILogger<UserManager<ApplicationUser>> logger,
+                       IImageUploadService imageService) :
+                        base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
     {
+        _imageService = imageService;
     }
 
     public override async Task<IdentityResult> UpdateAsync(ApplicationUser user)
@@ -19,9 +31,13 @@ public class UserService : UserManager<ApplicationUser>, IUserService
         if (tempUser == null)
             return IdentityResult.Failed(new IdentityError { Description = "User not found." });
 
+        if (!string.IsNullOrWhiteSpace(user.ImageBase64))
+            tempUser.ImageUrl = await _imageService.UploadImage(user.ImageBase64);
+
         tempUser.FirstName = user.FirstName;
         tempUser.LastName = user.LastName;
         tempUser.BirthDate = user.BirthDate;
+        tempUser.PhoneNumber = user.PhoneNumber;
 
         return await base.UpdateAsync(tempUser);
     }

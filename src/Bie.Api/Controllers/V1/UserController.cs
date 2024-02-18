@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using AutoMapper;
 
 using Bie.Api.Controllers.V1.Base;
@@ -40,6 +41,21 @@ public class UserController : BaseController
 
         return SuccessResponse(model);
     }
+    [HttpGet]
+    [ProducesResponseType(typeof(UserResponseDto), 200)]
+    public async Task<IActionResult> Profile()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (userId == null)
+            return this.ErrorResponse("User not found.");
+
+        var user = await _userManager.FindByIdAsync(userId);
+
+        var model = _mapper.Map<UserResponseDto>(user);
+
+        return SuccessResponse(model);
+    }
 
     [HttpPut]
     [ProducesResponseType(204)]
@@ -49,6 +65,12 @@ public class UserController : BaseController
         {
             if (user == null || user.Id == default)
                 throw new ArgumentException("User must be informed.");
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId != user.Id)
+                return ErrorResponse("User not authorized.");
+
 
             ApplicationUser applicationUser = _mapper.Map<ApplicationUser>(user);
             IdentityResult result = await _userService.UpdateAsync(applicationUser);

@@ -8,8 +8,8 @@ public class CompanyProfile : Profile
 {
     public CompanyProfile()
     {
-        CreateMap<Company, CompanyRequestDto>().ReverseMap();
-        CreateMap<Company, CompanyResponseDto>().ReverseMap();
+        CreateMap<CompanyRequestDto, Company>();
+        CreateMap<Company, CompanyResponseDto>();
 
         CreateMap<Company, SchedulingRequestDto>()
         .ForMember(dest => dest.CompanyId, opt => opt.MapFrom(src => src.Id))

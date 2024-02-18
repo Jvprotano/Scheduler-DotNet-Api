@@ -14,4 +14,9 @@ public class UserRequestDto : BaseDto
     [Display(Name = "E-mail")]
     [DataType(DataType.EmailAddress)]
     public string Email { get; set; } = string.Empty;
+    [Display(Name = "Phone")]
+    [DataType(DataType.PhoneNumber)]
+    public string PhoneNumber { get; set; } = string.Empty;
+    [Display(Name = "Image")]
+    public string ImageBase64 { get; set; } = string.Empty;
 }

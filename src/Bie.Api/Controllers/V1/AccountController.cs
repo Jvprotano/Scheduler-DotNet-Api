@@ -36,7 +36,7 @@ public class AccountController : BaseController
         if (user != null)
         {
             var token = _authService.GenerateToken(user);
-            return Ok(new LoginResponse() { Bearer = token, UserName = user.UserName ?? user.Email ?? "" });
+            return SuccessResponse(new LoginResponse() { Bearer = token, UserName = user.UserName ?? user.Email ?? "" });
         }
         return ErrorResponse("User not found or password is incorrect");
     }
