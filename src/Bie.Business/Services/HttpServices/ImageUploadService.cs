@@ -21,13 +21,13 @@ public class ImageUploadService : IImageUploadService
     {
         string fileName = Guid.NewGuid().ToString() + ".jpg";
         var data = new Regex(@"data:image\/[a-z]+;base64,").Replace(imageBase64, "");
-        
+
         byte[] bytes = Convert.FromBase64String(data);
 
         var blobClient = new BlobClient(_azureStorage, _azureContainer, fileName);
 
         using (var strem = new MemoryStream(bytes))
-        {
+        { 
             await blobClient.UploadAsync(strem);
         }
 
