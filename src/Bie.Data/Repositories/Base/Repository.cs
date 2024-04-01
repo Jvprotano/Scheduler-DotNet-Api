@@ -33,6 +33,22 @@ public class Repository<T> : IRepository<T> where T : EntityBase
             throw new Exception(ex.Message);
         }
     }
+    public virtual IQueryable<T> GetAll(bool active = true)
+    {
+        try
+        {
+            var query = DbSet.AsNoTracking();
+
+            if (!active)
+                query = query.IgnoreQueryFilters();
+
+            return query;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
     public virtual async Task<T> GetByIdAsync(string id, bool active = true)
     {
         try

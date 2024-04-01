@@ -12,11 +12,15 @@ public class SchedulingRepository : Repository<Scheduling>, ISchedulingRepositor
     {
     }
 
-    public async Task<IEnumerable<Scheduling>> GetAllByDateAsync(string companyId, DateOnly date)
+    public async Task<IEnumerable<Scheduling>> GetAllByDateAsync(string companyId, DateOnly date, string professionalId = null)
     {
-        return await DbSet.Where(c => c.CompanyId == companyId &&
-            c.Date == date)
-            .ToListAsync();
+        var query = DbSet.Where(c => c.CompanyId == companyId &&
+            c.Date == date);
+
+        if (!string.IsNullOrEmpty(professionalId))
+            query = query.Where(c => c.EmployeeId == professionalId);
+
+        return await query.ToListAsync();
     }
 
     public async Task<IEnumerable<Scheduling>> GetAllOpenByCompanyIdAsync(string companyId, DateOnly initialDate, DateOnly finalDate)

@@ -14,6 +14,10 @@ public class Service<T> : IService<T> where T : EntityBase
     {
         return await _repositoryBase.GetAllAsync(active);
     }
+    public virtual IQueryable<T> GetAll(bool active = true)
+    {
+        return _repositoryBase.GetAll(active);
+    }
     public virtual async Task<T> GetByIdAsync(string id, bool active = true)
     {
         return await _repositoryBase.GetByIdAsync(id, active);

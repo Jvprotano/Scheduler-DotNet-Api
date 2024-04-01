@@ -13,6 +13,7 @@ public class Company : ProfileBase
     public string? Cnpj { get; set; }
     public bool IsVirtual { get; set; }
     public DateTime? InactiveDate { get; set; }
+    public string SchedulingUrl { get; set; } = string.Empty;
     public ScheduleStatusEnum ScheduleStatus { get; set; }
     public IList<CompanyEmployee> Employeers { get; set; } = [];
     public IList<CompanyCategory> Categories { get; set; } = [];

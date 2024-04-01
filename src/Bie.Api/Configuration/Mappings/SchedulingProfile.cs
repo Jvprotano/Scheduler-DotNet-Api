@@ -9,6 +9,7 @@ public class SchedulingProfile : Profile
     {
         CreateMap<SchedulingRequestDto, Scheduling>()
         .ForMember(dest => dest.ServicesOfferedId, opt => opt.MapFrom(src => src.ServiceId))
-        .ForMember(dest => dest.EmployeeId, opt => opt.MapFrom(src => src.ProfessionalId));
+        .ForMember(dest => dest.EmployeeId, opt => opt.MapFrom(src => src.ProfessionalId))
+        .ForMember(dest => dest.Time, opt => opt.MapFrom(src => TimeOnly.Parse(src.Time)));
     }
 }

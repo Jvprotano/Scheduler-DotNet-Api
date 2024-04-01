@@ -1,5 +1,3 @@
-using System.Data.Common;
-using System.Net;
 using AutoMapper;
 
 using Bie.Api.Controllers.V1.Base;
@@ -10,6 +8,10 @@ using Bie.Business.Models;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+using System.Data.Common;
+using System.Net;
 
 namespace Bie.Api.Controllers.V1;
 
@@ -103,6 +105,18 @@ public class CompanyController : BaseController
         var model = _mapper.Map<CompanyResponseDto>(await _companyService.GetByIdAsync(id));
 
         return SuccessResponse(model);
+    }
+    [HttpGet]
+    [ProducesResponseType(typeof(CompanyResponseDto), 200)]
+    public async Task<IActionResult> GetBySchedulingUrl(string schedulingUrl)
+    {
+        var model = _mapper.Map<CompanyResponseDto>(await _companyService.GetAll()
+                                                            .Where(c => c.SchedulingUrl == schedulingUrl).FirstOrDefaultAsync());
+        return SuccessResponse(model);
+    }
+    public async Task<bool> CheckUrlExists(string schedulingUrl)
+    {
+        return await _companyService.GetAll().AnyAsync(c => c.SchedulingUrl == schedulingUrl);
     }
     [HttpGet]
     [Route("GetByUserId")]

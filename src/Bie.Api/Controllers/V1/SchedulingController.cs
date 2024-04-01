@@ -26,7 +26,7 @@ public class SchedulingController : BaseController
     {
         try
         {
-            if (model.Time == default)
+            if (TimeOnly.Parse(model.Time) == default)
                 throw new Exception("Time is required");
             if (string.IsNullOrWhiteSpace(model.ServiceId))
                 throw new Exception("Service is required");
@@ -36,6 +36,10 @@ public class SchedulingController : BaseController
             var scheduling = _mapper.Map<Scheduling>(model);
 
             await _serviceScheduling.SaveAsync(scheduling);
+        }
+        catch (FormatException)
+        {
+            return ErrorResponse("Invalid time format");
         }
         catch (Exception ex)
         {
@@ -49,11 +53,11 @@ public class SchedulingController : BaseController
     [Route("GetAvailableTimeSlots")]
     [ProducesResponseType(typeof(ApiResponse), 200)]
     [ProducesResponseType(typeof(ApiResponse), 400)]
-    public async Task<IActionResult> GetAvailableTimeSlots(string companyId, string serviceSelectedId, DateOnly dateSelected)
+    public async Task<IActionResult> GetAvailableTimeSlots(string companyId, string serviceId, DateOnly date, string? professionalId = null)
     {
         try
         {
-            List<TimeOnly> listTimes = (await _serviceScheduling.GetAvailableTimesAsync(companyId, serviceSelectedId, dateSelected)).ToList();
+            List<TimeOnly> listTimes = (await _serviceScheduling.GetAvailableTimesAsync(companyId, serviceId, date, professionalId)).ToList();
 
             return SuccessResponse(listTimes);
         }

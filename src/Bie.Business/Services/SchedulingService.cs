@@ -42,7 +42,7 @@ public class SchedulingService : Service<Scheduling>, ISchedulingService
         return await _repositoryScheduling.GetAllOpenByCompanyIdAsync(companyId, initialDate, finalDate);
     }
 
-    public async Task<IEnumerable<TimeOnly>> GetAvailableTimesAsync(string companyId, string serviceSelectedId, DateOnly date)
+    public async Task<IEnumerable<TimeOnly>> GetAvailableTimesAsync(string companyId, string serviceSelectedId, DateOnly date, string? professionalId = null)
     {
         List<CompanyOpeningHours> openingHours = _repositoryCompanyOpeningHours.GetByDayOfWeek(companyId, date.DayOfWeek);
 
@@ -56,9 +56,6 @@ public class SchedulingService : Service<Scheduling>, ISchedulingService
 
             if (serviceOffered == null)
                 throw new ArgumentNullException("Service not found");
-            // var shortestServiceDuration = company.ServicesOffered.Where(c => c.Duration > new TimeOnly()).Select(c => c.Duration).Min();
-            // if (shortestServiceDuration == default)
-            //     throw new Exception("Não há serviços cadastrados");
 
             var shortestServiceDuration = new TimeOnly(0, 10, 0);
 
@@ -85,7 +82,7 @@ public class SchedulingService : Service<Scheduling>, ISchedulingService
                 }
             }
 
-            List<Scheduling> busyTimes = (await _repositoryScheduling.GetAllByDateAsync(companyId, date)).ToList();
+            List<Scheduling> busyTimes = (await _repositoryScheduling.GetAllByDateAsync(companyId, date, professionalId)).ToList();
 
             if (date == DateOnly.FromDateTime(DateTime.Now))
                 availableTimes.RemoveAll(c => c < TimeOnly.FromDateTime(DateTime.Now));
