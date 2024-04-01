@@ -26,11 +26,11 @@ public class SchedulingController : BaseController
     {
         try
         {
-            if (model.TimeSelected == default)
+            if (model.Time == default)
                 throw new Exception("Time is required");
             if (string.IsNullOrWhiteSpace(model.ServiceId))
                 throw new Exception("Service is required");
-            if (model.ScheduledDate == default)
+            if (model.Date == default)
                 throw new Exception("Date is required");
 
             var scheduling = _mapper.Map<Scheduling>(model);

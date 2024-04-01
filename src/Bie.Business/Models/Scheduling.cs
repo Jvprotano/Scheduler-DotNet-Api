@@ -12,10 +12,14 @@ public class Scheduling : EntityBase
     [Required]
     public string CustomerId { get; set; } = string.Empty;
     public ApplicationUser? Customer { get; set; }
-    public DateOnly ScheduledDate { get; set; }
-    public TimeOnly ScheduledTime { get; set; }
+    public DateOnly Date { get; set; }
+    public TimeOnly Time { get; set; }
 
     [Required]
     public string ServicesOfferedId { get; set; } = string.Empty;
     public CompanyServiceOffered? ServiceOffered { get; set; }
+
+    [Required]
+    public string? EmployeeId { get; set; }
+    public ApplicationUser? Employee { get; set; }
 }

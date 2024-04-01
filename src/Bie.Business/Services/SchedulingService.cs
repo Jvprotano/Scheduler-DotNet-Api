@@ -24,7 +24,7 @@ public class SchedulingService : Service<Scheduling>, ISchedulingService
             throw new Exception("Company is required");
         if (string.IsNullOrWhiteSpace(entity.CustomerId))
             throw new Exception("Customer is required");
-        if (entity.ScheduledDate == default)
+        if (entity.Date == default)
             throw new Exception("Scheduled date is required");
         if (string.IsNullOrWhiteSpace(entity.ServicesOfferedId))
             throw new Exception("Service is required");
@@ -92,7 +92,7 @@ public class SchedulingService : Service<Scheduling>, ISchedulingService
 
             foreach (var item in busyTimes)
             {
-                var scheduledHour = item.ScheduledTime;
+                var scheduledHour = item.Time;
                 var scheduledDuration = item.ServiceOffered?.Duration;
 
                 TimeOnly finalBusyTime = scheduledHour.Add(scheduledDuration.GetValueOrDefault().ToTimeSpan());

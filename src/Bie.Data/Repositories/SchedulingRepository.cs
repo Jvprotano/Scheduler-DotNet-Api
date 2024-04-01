@@ -15,7 +15,7 @@ public class SchedulingRepository : Repository<Scheduling>, ISchedulingRepositor
     public async Task<IEnumerable<Scheduling>> GetAllByDateAsync(string companyId, DateOnly date)
     {
         return await DbSet.Where(c => c.CompanyId == companyId &&
-            c.ScheduledDate == date)
+            c.Date == date)
             .ToListAsync();
     }
 
@@ -24,9 +24,9 @@ public class SchedulingRepository : Repository<Scheduling>, ISchedulingRepositor
         return await this.DbSet
         .Include(c => c.ServiceOffered)
         .Include(c => c.Customer)
-        .Where(c => c.CompanyId == companyId && c.ScheduledDate >= initialDate &&
-                    c.ScheduledDate <= finalDate)
-        .OrderBy(c => c.ScheduledDate)
+        .Where(c => c.CompanyId == companyId && c.Date >= initialDate &&
+                    c.Date <= finalDate)
+        .OrderBy(c => c.Date)
         .ToListAsync();
     }
 }

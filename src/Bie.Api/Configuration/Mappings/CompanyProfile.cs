@@ -13,6 +13,6 @@ public class CompanyProfile : Profile
 
         CreateMap<Company, SchedulingRequestDto>()
         .ForMember(dest => dest.CompanyId, opt => opt.MapFrom(src => src.Id))
-        .ForMember(dest => dest.ScheduledDate, opt => opt.MapFrom(src => DateTime.Now));
+        .ForMember(dest => dest.Date, opt => opt.MapFrom(src => DateTime.Now));
     }
 }
