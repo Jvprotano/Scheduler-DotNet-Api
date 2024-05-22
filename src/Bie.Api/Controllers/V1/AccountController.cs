@@ -32,14 +32,21 @@ public class AccountController : BaseController
 
     public async Task<IActionResult> Login([FromBody] LoginDto model)
     {
-        ApplicationUser? user = await _authService.LoginAsync(model.EmailOrPhone, model.Password, model.RememberMe);
-
-        if (user != null)
+        try
         {
+            ApplicationUser? user = await _authService.LoginAsync(model.EmailOrPhone, model.Password, model.RememberMe);
+
+            if (user == null)
+                return ErrorResponse("User not found or password is incorrect");
+                
             var token = _authService.GenerateToken(user);
+
             return SuccessResponse(new LoginResponse() { Bearer = token, UserName = user.UserName ?? user.Email ?? "" });
         }
-        return ErrorResponse("User not found or password is incorrect");
+        catch (Exception ex)
+        {
+            return ErrorResponse(ex.InnerException.ToString());
+        }
     }
     [HttpPost]
     [Route("register")]
