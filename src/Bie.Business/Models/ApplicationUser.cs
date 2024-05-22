@@ -21,6 +21,11 @@ public class ApplicationUser : IdentityUser
     public string? ImagePrompt { get; set; }
     [NotMapped]
     public string? ImageBase64 { get; set; }
+    [NotMapped]
+    public string ConfirmPassword { get; set; } = string.Empty;
+
+
+
 
     public IList<Scheduling>? Schedulings { get; set; }
     public IList<CompanyEmployee>? UserCompanies { get; set; }

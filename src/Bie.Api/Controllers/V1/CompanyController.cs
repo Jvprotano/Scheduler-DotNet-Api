@@ -107,6 +107,7 @@ public class CompanyController : BaseController
         return SuccessResponse(model);
     }
     [HttpGet]
+    [Route("GetBySchedulingUrl")]
     [ProducesResponseType(typeof(CompanyResponseDto), 200)]
     public async Task<IActionResult> GetBySchedulingUrl(string schedulingUrl)
     {
@@ -114,6 +115,8 @@ public class CompanyController : BaseController
                                                             .Where(c => c.SchedulingUrl == schedulingUrl).FirstOrDefaultAsync());
         return SuccessResponse(model);
     }
+    [HttpGet]
+    [Route("CheckUrlExists")]
     public async Task<bool> CheckUrlExists(string schedulingUrl)
     {
         return await _companyService.GetAll().AnyAsync(c => c.SchedulingUrl == schedulingUrl);

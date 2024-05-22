@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using System.ComponentModel.DataAnnotations;
 
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -76,14 +77,48 @@ public class AuthService : IAuthService
     {
         return await _userManager.FindByEmailAsync(email);
     }
+    private async Task ValidateAsync(ApplicationUser appUser)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(appUser.FirstName))
+                throw new ValidationException("First Name is required");
+            if (string.IsNullOrWhiteSpace(appUser.LastName))
+                throw new ValidationException("First Name is required");
+            if (string.IsNullOrWhiteSpace(appUser.PhoneNumber))
+                throw new ValidationException("Phone number is required");
+            if (appUser.BirthDate == default)
+                throw new ValidationException("Birth Date is required");
+            if (await FindByEmailAsync(appUser.Email ?? "") != null)
+                throw new ValidationException("Email already exists");
+            if (await FindByPhoneAsync(appUser.PhoneNumber ?? "") != null)
+                throw new ValidationException("Phone already exists");
+        }
+        catch (ValidationException)
+        {
+            throw;
+        }
+    }
 
     public async Task<ApplicationUser?> CreateAsync(ApplicationUser user, string password)
     {
+        await ValidateAsync(user);
+
         var result = await _userManager.CreateAsync(user, password ?? "");
 
         if (result.Succeeded)
             return await _userManager.FindByEmailAsync(user.Email ?? "");
 
-        return null;
+        string requestError = string.Empty;
+
+        foreach (var item in result.Errors)
+        {
+            requestError += item.Description;
+        }
+
+        if (!string.IsNullOrEmpty(requestError))
+            throw new ValidationException(requestError);
+
+        throw new Exception("Unknow error.");
     }
 }

@@ -6,6 +6,7 @@ using Bie.Api.DTOs.Request;
 using Bie.Api.DTOs.Response;
 using Bie.Business.Interfaces.Services;
 using Bie.Business.Models;
+using FluentValidation.Results;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -44,36 +45,47 @@ public class AccountController : BaseController
     [Route("register")]
     public async Task<IActionResult> Register([FromBody] RegisterDto model)
     {
-        string[] errors = new string[] { };
-
-        if (model.Password != model.ConfirmPassword)
-            errors.Append("Passwords don't match");
-        if (await _authService.FindByEmailAsync(model.Email ?? "") != null)
-            errors.Append("Email already exists");
-        if (await _authService.FindByPhoneAsync(model.Phone ?? "") != null)
-            errors.Append("Phone already exists");
-
-        if (!errors.Any())
+        try
         {
-            try
-            {
-                var appUser = _mappper.Map<ApplicationUser>(model);
-                var user = await _authService.CreateAsync(appUser, model.Password);
+            RegisterDtoValidator validator = new();
 
-                if (user != null)
-                    SuccessResponse(new object());
+            ValidationResult validationResult = validator.Validate(model);
 
-                ErrorResponse("User not created");
-            }
-            catch (DbException ex)
+            if (!validationResult.IsValid)
             {
-                ErrorResponse(ex.Message, System.Net.HttpStatusCode.InternalServerError);
+                string errors = string.Empty;
+                foreach (var item in validationResult.Errors)
+                {
+                    errors += item.ErrorMessage + " ";
+                }
+                return ErrorResponse(errors);
             }
-            catch (Exception ex)
+
+            var appUser = _mappper.Map<ApplicationUser>(model);
+            var user = await _authService.CreateAsync(appUser, model.Password);
+
+            if (user != null)
             {
-                ErrorResponse(ex.Message);
+                var userResponse = new UserResponseDto()
+                {
+                    Id = user.Id,
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    Email = model.Email
+                };
+
+                return SuccessResponse(userResponse);
             }
+
+            return ErrorResponse("User not created");
         }
-        return ErrorResponse(errors.ToString() ?? "Unknow error.");
+        catch (DbException ex)
+        {
+            return ErrorResponse(ex.Message, System.Net.HttpStatusCode.InternalServerError);
+        }
+        catch (Exception ex)
+        {
+            return ErrorResponse(ex.Message);
+        }
     }
 }
