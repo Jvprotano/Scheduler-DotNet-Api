@@ -7,6 +7,7 @@ using Bie.Data.Context.Extensions;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.ApplicationInsights;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -120,6 +121,14 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 });
 
 builder.Services.AddRepositories();
+
+builder.Logging.AddApplicationInsights(
+        configureTelemetryConfiguration: (config) => 
+            config.ConnectionString = builder.Configuration.GetConnectionString("ApplicationInsights"),
+            configureApplicationInsightsLoggerOptions: (options) => { }
+    );
+
+// builder.Logging.AddFilter<ApplicationInsightsLoggerProvider>("your-category", LogLevel.Trace);
 
 var app = builder.Build();
 
