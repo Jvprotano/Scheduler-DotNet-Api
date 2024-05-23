@@ -17,12 +17,12 @@ public class AccountController : BaseController
 {
     private readonly IMapper _mappper;
     private readonly IAuthService _authService;
-    private readonly ILogger _logger;
+    private readonly ILogger<AccountController> _logger;
 
     public AccountController(
         IMapper mappper,
         IAuthService authService,
-        ILogger logger) : base()
+        ILogger<AccountController> logger) : base()
     {
         _mappper = mappper;
         _authService = authService;
