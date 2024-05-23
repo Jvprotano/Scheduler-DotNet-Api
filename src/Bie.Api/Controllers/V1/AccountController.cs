@@ -17,13 +17,17 @@ public class AccountController : BaseController
 {
     private readonly IMapper _mappper;
     private readonly IAuthService _authService;
+    private readonly ILogger _logger;
 
     public AccountController(
         IMapper mappper,
-        IAuthService authService) : base()
+        IAuthService authService,
+        ILogger logger) : base()
     {
         _mappper = mappper;
         _authService = authService;
+        _logger = logger;
+
     }
     [HttpPost]
     [Route("login")]
@@ -34,20 +38,28 @@ public class AccountController : BaseController
     {
         try
         {
+            _logger.LogInformation("Login attempt for {EmailOrPhone}", model.EmailOrPhone);
+
             ApplicationUser? user = await _authService.LoginAsync(model.EmailOrPhone, model.Password, model.RememberMe);
 
             if (user == null)
+            {
+                _logger.LogWarning("Login failed for {EmailOrPhone}", model.EmailOrPhone);
                 return ErrorResponse("User not found or password is incorrect");
-                
+            }
+
             var token = _authService.GenerateToken(user);
 
+            _logger.LogInformation("Login successful for {EmailOrPhone}", model.EmailOrPhone);
             return SuccessResponse(new LoginResponse() { Bearer = token, UserName = user.UserName ?? user.Email ?? "" });
         }
         catch (Exception ex)
         {
-            return ErrorResponse(ex.InnerException.ToString());
+            _logger.LogError(ex, "Error during login for {EmailOrPhone}", model.EmailOrPhone);
+            return ErrorResponse("An error occurred while processing your request.");
         }
     }
+
     [HttpPost]
     [Route("register")]
     public async Task<IActionResult> Register([FromBody] RegisterDto model)
