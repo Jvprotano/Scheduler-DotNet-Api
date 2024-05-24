@@ -124,7 +124,7 @@ builder.Services.AddRepositories();
 
 builder.Logging.AddApplicationInsights(
         configureTelemetryConfiguration: (config) => 
-            config.ConnectionString = builder.Configuration.GetConnectionString("ApplicationInsights"),
+            config.ConnectionString = builder.Configuration.GetConnectionString("APPLICATIONINSIGHTS_CONNECTION_STRING"),
             configureApplicationInsightsLoggerOptions: (options) => { }
     );
 
