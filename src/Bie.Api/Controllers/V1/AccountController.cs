@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Data.Common;
 using AutoMapper;
 
@@ -66,19 +67,10 @@ public class AccountController : BaseController
     {
         try
         {
-            RegisterDtoValidator validator = new();
-
-            ValidationResult validationResult = validator.Validate(model);
+            FluentValidation.Results.ValidationResult validationResult = new RegisterDtoValidator().Validate(model);
 
             if (!validationResult.IsValid)
-            {
-                string errors = string.Empty;
-                foreach (var item in validationResult.Errors)
-                {
-                    errors += item.ErrorMessage + " ";
-                }
-                return ErrorResponse(errors);
-            }
+                return ErrorResponse(validationResult.ToString());
 
             var appUser = _mappper.Map<ApplicationUser>(model);
             var user = await _authService.CreateAsync(appUser, model.Password);
@@ -93,6 +85,7 @@ public class AccountController : BaseController
                     Email = model.Email
                 };
 
+                _logger.LogInformation("Created user: " + userResponse.Email);
                 return SuccessResponse(userResponse);
             }
 
@@ -100,10 +93,12 @@ public class AccountController : BaseController
         }
         catch (DbException ex)
         {
+            _logger.LogTrace(ex.StackTrace);
             return ErrorResponse(ex.Message, System.Net.HttpStatusCode.InternalServerError);
         }
         catch (Exception ex)
         {
+            _logger.LogTrace(ex.StackTrace);
             return ErrorResponse(ex.Message);
         }
     }
