@@ -116,10 +116,13 @@ public class CompanyController : BaseController
         return SuccessResponse(model);
     }
     [HttpGet]
-    [Route("CheckUrlExists")]
-    public async Task<bool> CheckUrlExists(string schedulingUrl)
+    [Route("CheckUrlIsValid")]
+    public async Task<bool> CheckUrlIsValid([FromQuery] string schedulingUrl, [FromQuery] string? id = null)
     {
-        return await _companyService.GetAll().AnyAsync(c => c.SchedulingUrl == schedulingUrl);
+        if (!string.IsNullOrWhiteSpace(id))
+            return !await _companyService.GetAll().AnyAsync(c => c.SchedulingUrl == schedulingUrl && c.Id != id);
+        
+        return !await _companyService.GetAll().AnyAsync(c => c.SchedulingUrl == schedulingUrl);
     }
     [HttpGet]
     [Route("GetByUserId")]
