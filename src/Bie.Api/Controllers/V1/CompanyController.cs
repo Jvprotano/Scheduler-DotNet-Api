@@ -117,12 +117,23 @@ public class CompanyController : BaseController
     }
     [HttpGet]
     [Route("CheckUrlIsValid")]
-    public async Task<bool> CheckUrlIsValid([FromQuery] string schedulingUrl, [FromQuery] string? id = null)
+    public async Task<IActionResult> CheckUrlIsValid([FromQuery] string schedulingUrl, [FromQuery] string? id = null)
     {
-        if (!string.IsNullOrWhiteSpace(id))
-            return !await _companyService.GetAll().AnyAsync(c => c.SchedulingUrl == schedulingUrl && c.Id != id);
-        
-        return !await _companyService.GetAll().AnyAsync(c => c.SchedulingUrl == schedulingUrl);
+        try
+        {
+            bool urlIsValid = false;
+
+            if (!string.IsNullOrWhiteSpace(id))
+                urlIsValid = !await _companyService.GetAll().AnyAsync(c => c.SchedulingUrl == schedulingUrl && c.Id != id);
+
+            urlIsValid = !await _companyService.GetAll().AnyAsync(c => c.SchedulingUrl == schedulingUrl);
+
+            return SuccessResponse(urlIsValid);
+        }
+        catch (Exception ex)
+        {
+            return ErrorResponse(ex.Message);
+        }
     }
     [HttpGet]
     [Route("GetByUserId")]
