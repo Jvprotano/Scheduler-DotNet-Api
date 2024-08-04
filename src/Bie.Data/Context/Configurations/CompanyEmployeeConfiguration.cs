@@ -12,6 +12,9 @@ public class CompanyEmployeeConfiguration : EntityBaseConfiguration<CompanyEmplo
 
         builder.ToTable("company_employees");
 
+        builder.Property(c => c.IsOwner)
+         .HasDefaultValue(false);
+
         builder.HasOne(x => x.Company)
             .WithMany(x => x.Employeers)
             .HasForeignKey(x => x.CompanyId);
