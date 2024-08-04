@@ -128,8 +128,6 @@ builder.Logging.AddApplicationInsights(
             configureApplicationInsightsLoggerOptions: (options) => { }
     );
 
-// builder.Logging.AddFilter<ApplicationInsightsLoggerProvider>("your-category", LogLevel.Trace);
-
 var app = builder.Build();
 
 app.UseCors("AllowLocalhost");
