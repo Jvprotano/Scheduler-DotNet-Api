@@ -1,5 +1,7 @@
+using Bie.Business.Enums;
 using Bie.Business.Models;
 using Bie.Data.Context.Configurations.Base;
+using Microsoft.EntityFrameworkCore;
 
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -9,6 +11,9 @@ public class CompanyConfiguration : ProfileBaseConfiguration<Company>
     public override void Configure(EntityTypeBuilder<Company> builder)
     {
         base.Configure(builder);
+
+        builder.Property(c => c.ScheduleStatus)
+            .HasDefaultValue(ScheduleStatusEnum.Closed);
 
         builder.HasMany(c => c.Employeers)
             .WithOne(c => c.Company)
