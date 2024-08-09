@@ -9,6 +9,7 @@ public class CompanyServiceOffered : EntityBase
 {
     [Required]
     public string Name { get; set; } = string.Empty;
+    public string? Description { get; set; } = string.Empty;
     [Required]
     public float Price { get; set; }
     [Required]

@@ -86,4 +86,9 @@ public class UserController : BaseController
         }
     }
 
+    private void NewFollower(string followerName)
+    {
+        Console.WriteLine($"{followerName} está agora ajudando a criar novos bugs resolvendo os antigos");
+    }
+
 }

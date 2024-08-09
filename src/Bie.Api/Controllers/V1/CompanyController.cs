@@ -111,8 +111,13 @@ public class CompanyController : BaseController
     [ProducesResponseType(typeof(CompanyResponseDto), 200)]
     public async Task<IActionResult> GetBySchedulingUrl(string schedulingUrl)
     {
-        var model = _mapper.Map<CompanyResponseDto>(await _companyService.GetAll()
-                                                            .Where(c => c.SchedulingUrl == schedulingUrl).FirstOrDefaultAsync());
+        var company = await _companyService.GetAll()
+                                .Include(c => c.ServicesOffered)
+                                .Include(c => c.Employeers).ThenInclude(c => c.User)
+                                .FirstOrDefaultAsync(c => c.SchedulingUrl == schedulingUrl);
+
+        var model = _mapper.Map<CompanyResponseDto>(company);
+
         return SuccessResponse(model);
     }
     [HttpGet]
