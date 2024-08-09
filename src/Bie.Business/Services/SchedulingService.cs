@@ -42,7 +42,7 @@ public class SchedulingService : Service<Scheduling>, ISchedulingService
         return await _repositoryScheduling.GetAllOpenByCompanyIdAsync(companyId, initialDate, finalDate);
     }
 
-    public async Task<IEnumerable<TimeOnly>> GetAvailableTimesAsync(string companyId, string serviceSelectedId, DateOnly date, string? professionalId = null)
+    public async Task<IEnumerable<string>> GetAvailableTimesAsync(string companyId, string serviceSelectedId, DateOnly date, string? professionalId = null)
     {
         List<CompanyOpeningHours> openingHours = _repositoryCompanyOpeningHours.GetByDayOfWeek(companyId, date.DayOfWeek);
 
@@ -98,6 +98,6 @@ public class SchedulingService : Service<Scheduling>, ISchedulingService
             }
         }
 
-        return availableTimes;
+        return availableTimes.Select(t => t.ToString("HH:mm"));
     }
 }

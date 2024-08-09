@@ -57,7 +57,7 @@ public class SchedulingController : BaseController
     {
         try
         {
-            List<TimeOnly> listTimes = (await _serviceScheduling.GetAvailableTimesAsync(companyId, serviceId, date, professionalId)).ToList();
+            List<string> listTimes = (await _serviceScheduling.GetAvailableTimesAsync(companyId, serviceId, date, professionalId)).ToList();
 
             return SuccessResponse(listTimes);
         }
