@@ -9,6 +9,8 @@ public class CompanyEmployeeProfile : Profile
     {
         CreateMap<CompanyEmployee, CompanyEmployeeDto>()
         .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User != null ? 
-                                                                  src.User.FirstName : ""));
+                                                                  src.User.FirstName : ""))
+        .ForMember(dest => dest.UserImageUrl, opt => opt.MapFrom(src => src.User != null ? 
+                                                                  src.User.ImageUrl : ""));
     }
 }
