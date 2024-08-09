@@ -22,4 +22,6 @@ public class CompanyResponseDto : BaseDto
     public bool IsVirtual { get; set; }
     public string ImageUrl { get; set; } = string.Empty;
     public ScheduleStatusEnum ScheduleStatus { get; set; }
+    public IList<CompanyServiceOfferedDto>? ServicesOffered { get; set; }
+    public IList<CompanyEmployeeDto>? Employeers { get; set; }
 }

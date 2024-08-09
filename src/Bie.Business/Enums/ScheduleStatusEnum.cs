@@ -1,6 +1,6 @@
 namespace Bie.Business.Enums;
 public enum ScheduleStatusEnum
 {
-    Open = 1,
-    Closed = 2
+    Closed = 0,
+    Open = 1
 }
