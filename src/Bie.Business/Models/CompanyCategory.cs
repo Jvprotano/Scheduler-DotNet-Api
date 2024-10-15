@@ -1,14 +1,19 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 using Bie.Business.Enums;
 using Bie.Business.Models.Base;
 
-using System.ComponentModel.DataAnnotations.Schema;
-
 namespace Bie.Business.Models;
 [Table("companies_categories")]
+[NotMapped]
 public class CompanyCategory : EntityBase
 {
-    public string CompanyId { get; set; } = string.Empty;
-    public Company? Company { get; set; }
+    public CompanyCategory(Guid companyId)
+    {
+        CompanyId = companyId;
+    }
 
-    public CategoryEnum CategoryId { get; set; }
+    public Guid CompanyId { get; private set; }
+    public Company? Company { get; set; }
+    public CategoryEnum CategoryId { get; private set; }
 }

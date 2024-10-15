@@ -1,25 +1,38 @@
-using Bie.Business.Models.Base;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+
+using Bie.Business.Models.Base;
 
 namespace Bie.Business.Models;
 [Table("schedulings")]
 public class Scheduling : EntityBase
 {
-    [Required]
-    public string CompanyId { get; set; } = string.Empty;
-    public Company? Company { get; set; }
-    [Required]
-    public string CustomerId { get; set; } = string.Empty;
-    public ApplicationUser? Customer { get; set; }
-    public DateOnly Date { get; set; }
-    public TimeOnly Time { get; set; }
+    public Scheduling(Guid companyId, Guid customerId, DateOnly date,
+                    TimeOnly time, Guid servicesOfferedId, Guid? employeeId)
+                    : base()
+    {
+        CompanyId = companyId;
+        CustomerId = customerId;
+        Date = date;
+        Time = time;
+        ServicesOfferedId = servicesOfferedId;
+        EmployeeId = employeeId;
+    }
 
     [Required]
-    public string ServicesOfferedId { get; set; } = string.Empty;
-    public CompanyServiceOffered? ServiceOffered { get; set; }
+    public Guid CompanyId { get; private set; }
+    public Company? Company { get; private set; }
+    [Required]
+    public Guid CustomerId { get; private set; }
+    public ApplicationUser? Customer { get; private set; }
+    public DateOnly Date { get; private set; }
+    public TimeOnly Time { get; private set; }
 
     [Required]
-    public string? EmployeeId { get; set; }
-    public ApplicationUser? Employee { get; set; }
+    public Guid ServicesOfferedId { get; private set; }
+    public CompanyServiceOffered? ServiceOffered { get; private set; }
+
+    [Required]
+    public Guid? EmployeeId { get; private set; }
+    public ApplicationUser? Employee { get; private set; }
 }

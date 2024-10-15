@@ -14,7 +14,7 @@ public class CompanyRepository : Repository<Company>, ICompanyRepository
     public CompanyRepository(ApplicationDbContext context) : base(context)
     {
     }
-    public override async Task<Company> GetByIdAsync(string id, bool active = true)
+    public override async Task<Company> GetByIdAsync(Guid id, bool active = true)
     {
         var query = DbSet
             .Include(c => c.OpeningHours)
@@ -50,7 +50,7 @@ public class CompanyRepository : Repository<Company>, ICompanyRepository
 
         return await query.ToListAsync();
     }
-    public async Task<IEnumerable<Company>> GetCompaniesByUserAsync(string userId)
+    public async Task<IEnumerable<Company>> GetCompaniesByUserAsync(Guid userId)
     {
         return await DbSet
             .IgnoreQueryFilters()
@@ -60,12 +60,10 @@ public class CompanyRepository : Repository<Company>, ICompanyRepository
             .ToListAsync();
     }
 
-    public async Task TemporaryDeleteAsync(string id)
+    public async Task TemporaryDeleteAsync(Guid id)
     {
         var entity = await GetAsync(id);
-        entity.ScheduleStatus = ScheduleStatusEnum.Closed;
-        entity.Status = StatusEnum.TemporaryRemoved;
-        entity.InactiveDate = DateTime.Now;
+        entity.TemporaryRemove();
 
         await base.TemporaryDeleteAsync(entity);
     }
@@ -77,12 +75,9 @@ public class CompanyRepository : Repository<Company>, ICompanyRepository
         .ToListAsync();
     }
 
-    public async Task ReactiveAsync(string id)
+    public async Task ReactiveAsync(Guid id)
     {
         var company = await GetAsync(id, active: false);
-        company.Status = StatusEnum.Active;
-        company.ScheduleStatus = ScheduleStatusEnum.Closed;
-        company.InactiveDate = null;
         
         await base.SaveAsync(company);
     }

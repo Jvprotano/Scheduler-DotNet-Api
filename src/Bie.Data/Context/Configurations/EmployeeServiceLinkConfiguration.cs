@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Bie.Data.Context.Configurations;
-public class EmployeeServiceLinkConfiguration : EntityBaseConfiguration<EmployeeServiceLink>
+public class EmployeeServiceLinkConfiguration : EntityBaseConfiguration<EmployeeService>
 {
-    public override void Configure(EntityTypeBuilder<EmployeeServiceLink> builder)
+    public override void Configure(EntityTypeBuilder<EmployeeService> builder)
     {
         base.Configure(builder);
 

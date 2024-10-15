@@ -1,4 +1,9 @@
 using System.Security.Claims;
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+
 using AutoMapper;
 
 using Bie.Api.Controllers.V1.Base;
@@ -6,10 +11,6 @@ using Bie.Api.DTOs.Request;
 using Bie.Api.DTOs.Response;
 using Bie.Business.Interfaces.Services;
 using Bie.Business.Models;
-
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Bie.Api.Controllers.V1;
 
@@ -30,9 +31,9 @@ public class UserController : BaseController
 
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(UserResponseDto), 200)]
-    public async Task<IActionResult> Get(string id)
+    public async Task<IActionResult> Get(Guid id)
     {
-        var user = await _userManager.FindByIdAsync(id);
+        var user = await _userManager.FindByIdAsync(id.ToString());
 
         if (user == null)
             return this.ErrorResponse("User not found.");
@@ -68,9 +69,8 @@ public class UserController : BaseController
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (userId != user.Id)
+            if (Guid.TryParse(userId, out Guid id) && id != user.Id)
                 return ErrorResponse("User not authorized.");
-
 
             ApplicationUser applicationUser = _mapper.Map<ApplicationUser>(user);
             IdentityResult result = await _userService.UpdateAsync(applicationUser);

@@ -10,6 +10,10 @@
     <ProjectReference Include="..\Bie.Business\Bie.Business.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="src\Bie.Data\Migrations\Old\**" />
+</ItemGroup>
+
     <ItemGroup>
       <PackageReference Include="AutoMapper" Version="12.0.1" />
       <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />

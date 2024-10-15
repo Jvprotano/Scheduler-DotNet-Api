@@ -20,13 +20,13 @@ public class SchedulingService : Service<Scheduling>, ISchedulingService
     }
     public override void Validate(Scheduling entity)
     {
-        if (string.IsNullOrWhiteSpace(entity.CompanyId))
+        if (entity.CompanyId == default)
             throw new Exception("Company is required");
-        if (string.IsNullOrWhiteSpace(entity.CustomerId))
+        if (entity.CustomerId == default)
             throw new Exception("Customer is required");
         if (entity.Date == default)
             throw new Exception("Scheduled date is required");
-        if (string.IsNullOrWhiteSpace(entity.ServicesOfferedId))
+        if (entity.ServicesOfferedId == default)
             throw new Exception("Service is required");
 
         base.Validate(entity);
@@ -37,12 +37,12 @@ public class SchedulingService : Service<Scheduling>, ISchedulingService
         return base.SaveAsync(entity);
     }
 
-    public async Task<IEnumerable<Scheduling>> GetAllOpenByCompanyIdAsync(string companyId, DateOnly initialDate, DateOnly finalDate)
+    public async Task<IEnumerable<Scheduling>> GetAllOpenByCompanyIdAsync(Guid companyId, DateOnly initialDate, DateOnly finalDate)
     {
         return await _repositoryScheduling.GetAllOpenByCompanyIdAsync(companyId, initialDate, finalDate);
     }
 
-    public async Task<IEnumerable<string>> GetAvailableTimesAsync(string companyId, string serviceSelectedId, DateOnly date, string? professionalId = null)
+    public async Task<IEnumerable<string>> GetAvailableTimesAsync(Guid companyId, Guid serviceSelectedId, DateOnly date, Guid? professionalId = null)
     {
         List<CompanyOpeningHours> openingHours = _repositoryCompanyOpeningHours.GetByDayOfWeek(companyId, date.DayOfWeek);
 
@@ -52,7 +52,7 @@ public class SchedulingService : Service<Scheduling>, ISchedulingService
         {
             Company company = await _serviceCompany.GetByIdAsync(companyId);
 
-            CompanyServiceOffered? serviceOffered = company.ServicesOffered.Where(c => c.Id == serviceSelectedId).FirstOrDefault();
+            CompanyServiceOffered? serviceOffered = company.ServicesOffered?.Where(c => c.Id == serviceSelectedId).FirstOrDefault();
 
             if (serviceOffered == null)
                 throw new ArgumentNullException("Service not found");

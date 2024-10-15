@@ -1,3 +1,10 @@
+using System.Data.Common;
+using System.Net;
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
 using AutoMapper;
 
 using Bie.Api.Controllers.V1.Base;
@@ -5,13 +12,6 @@ using Bie.Api.DTOs.Request;
 using Bie.Api.DTOs.Response;
 using Bie.Business.Interfaces.Services;
 using Bie.Business.Models;
-
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-
-using System.Data.Common;
-using System.Net;
 
 namespace Bie.Api.Controllers.V1;
 
@@ -52,7 +52,7 @@ public class CompanyController : BaseController
         {
             if (model == null)
                 throw new ArgumentNullException("Company not found");
-            if (model.Id == null || model.Id == default)
+            if (model.Id == default)
                 throw new ArgumentNullException("Existing company must be informed");
 
             var company = _mapper.Map<Company>(model);
@@ -71,7 +71,7 @@ public class CompanyController : BaseController
         }
     }
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult> Delete(string id)
+    public async Task<IActionResult> Delete(Guid id)
     {
         try
         {
@@ -86,7 +86,7 @@ public class CompanyController : BaseController
     }
     [Route("Reactive")]
     [HttpGet]
-    public async Task<IActionResult> Reactive(string id)
+    public async Task<IActionResult> Reactive(Guid id)
     {
         try
         {
@@ -100,7 +100,7 @@ public class CompanyController : BaseController
     }
     [HttpGet]
     [ProducesResponseType(typeof(CompanyResponseDto), 200)]
-    public async Task<IActionResult> Get(string id)
+    public async Task<IActionResult> Get(Guid id)
     {
         var model = _mapper.Map<CompanyResponseDto>(await _companyService.GetByIdAsync(id));
 
@@ -113,7 +113,7 @@ public class CompanyController : BaseController
     {
         var company = await _companyService.GetAll()
                                 .Include(c => c.ServicesOffered)
-                                .Include(c => c.Employeers).ThenInclude(c => c.User)
+                                .Include(c => c.Employeers)!.ThenInclude(c => c.User)
                                 .FirstOrDefaultAsync(c => c.SchedulingUrl == schedulingUrl);
 
         var model = _mapper.Map<CompanyResponseDto>(company);
@@ -129,7 +129,7 @@ public class CompanyController : BaseController
             bool urlIsValid = false;
 
             if (!string.IsNullOrWhiteSpace(id))
-                urlIsValid = !await _companyService.GetAll().AnyAsync(c => c.SchedulingUrl == schedulingUrl && c.Id != id);
+                urlIsValid = !await _companyService.GetAll().AnyAsync(c => c.SchedulingUrl == schedulingUrl && c.Id != Guid.Parse(id));
 
             urlIsValid = !await _companyService.GetAll().AnyAsync(c => c.SchedulingUrl == schedulingUrl);
 
@@ -143,11 +143,11 @@ public class CompanyController : BaseController
     [HttpGet]
     [Route("GetByUserId")]
     [ProducesResponseType(typeof(List<CompanyResponseDto>), 200)]
-    public async Task<IActionResult> GetByUserId(string userId)
+    public async Task<IActionResult> GetByUserId(Guid userId)
     {
         try
         {
-            if (userId == null)
+            if (userId == default)
                 throw new ArgumentNullException("User not found");
 
             var companies = (await _companyService.GetCompaniesByUserAsync(userId)).ToList();

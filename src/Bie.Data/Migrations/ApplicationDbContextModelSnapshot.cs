@@ -24,8 +24,9 @@ namespace Bie.Data.Migrations
 
             modelBuilder.Entity("Bie.Business.Models.ApplicationUser", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
 
                     b.Property<int>("AccessFailedCount")
@@ -138,12 +139,15 @@ namespace Bie.Data.Migrations
 
             modelBuilder.Entity("Bie.Business.Models.City", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
 
                     b.Property<string>("Country")
-                        .HasColumnType("nvarchar(max)")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
                         .HasColumnName("country");
 
                     b.Property<DateTime>("CreatedAt")
@@ -151,11 +155,15 @@ namespace Bie.Data.Migrations
                         .HasColumnName("created_at");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
                         .HasColumnName("name");
 
                     b.Property<string>("State")
-                        .HasColumnType("nvarchar(max)")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
                         .HasColumnName("state");
 
                     b.Property<int>("Status")
@@ -173,8 +181,9 @@ namespace Bie.Data.Migrations
 
             modelBuilder.Entity("Bie.Business.Models.Company", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
 
                     b.Property<string>("Address")
@@ -189,8 +198,8 @@ namespace Bie.Data.Migrations
                         .HasColumnType("bit")
                         .HasColumnName("auto_generated_image");
 
-                    b.Property<string>("CityId")
-                        .HasColumnType("nvarchar(450)")
+                    b.Property<Guid?>("CityId")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("city_id");
 
                     b.Property<string>("Cnpj")
@@ -262,49 +271,15 @@ namespace Bie.Data.Migrations
                     b.ToTable("companies");
                 });
 
-            modelBuilder.Entity("Bie.Business.Models.CompanyCategory", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("id");
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int")
-                        .HasColumnName("category_id");
-
-                    b.Property<string>("CompanyId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("company_id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("created_at");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int")
-                        .HasColumnName("status");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("updated_at");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CompanyId");
-
-                    b.ToTable("companies_categories");
-                });
-
             modelBuilder.Entity("Bie.Business.Models.CompanyEmployee", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
 
-                    b.Property<string>("CompanyId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("company_id");
 
                     b.Property<DateTime>("CreatedAt")
@@ -325,9 +300,8 @@ namespace Bie.Data.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("updated_at");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("user_id");
 
                     b.HasKey("Id");
@@ -341,17 +315,17 @@ namespace Bie.Data.Migrations
 
             modelBuilder.Entity("Bie.Business.Models.CompanyOpeningHours", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
 
                     b.Property<TimeOnly>("ClosingHour")
                         .HasColumnType("time")
                         .HasColumnName("closing_hour");
 
-                    b.Property<string>("CompanyId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("company_id");
 
                     b.Property<DateTime>("CreatedAt")
@@ -383,13 +357,13 @@ namespace Bie.Data.Migrations
 
             modelBuilder.Entity("Bie.Business.Models.CompanyServiceOffered", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
 
-                    b.Property<string>("CompanyId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("company_id");
 
                     b.Property<DateTime>("CreatedAt")
@@ -428,24 +402,23 @@ namespace Bie.Data.Migrations
                     b.ToTable("companies_services_offered");
                 });
 
-            modelBuilder.Entity("Bie.Business.Models.EmployeeServiceLink", b =>
+            modelBuilder.Entity("Bie.Business.Models.EmployeeService", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2")
                         .HasColumnName("created_at");
 
-                    b.Property<string>("EmployeeId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                    b.Property<Guid>("EmployeeId")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("employee_id");
 
-                    b.Property<string>("ServiceId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                    b.Property<Guid>("ServiceId")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("service_id");
 
                     b.Property<int>("Status")
@@ -467,36 +440,34 @@ namespace Bie.Data.Migrations
 
             modelBuilder.Entity("Bie.Business.Models.Scheduling", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
 
-                    b.Property<string>("CompanyId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("company_id");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2")
                         .HasColumnName("created_at");
 
-                    b.Property<string>("CustomerId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("customer_id");
 
                     b.Property<DateOnly>("Date")
                         .HasColumnType("date")
                         .HasColumnName("date");
 
-                    b.Property<string>("EmployeeId")
+                    b.Property<Guid?>("EmployeeId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("employee_id");
 
-                    b.Property<string>("ServicesOfferedId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                    b.Property<Guid>("ServicesOfferedId")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("services_offered_id");
 
                     b.Property<int>("Status")
@@ -524,10 +495,11 @@ namespace Bie.Data.Migrations
                     b.ToTable("schedulings");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("id");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -555,7 +527,7 @@ namespace Bie.Data.Migrations
                     b.ToTable("AspNetRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -572,9 +544,8 @@ namespace Bie.Data.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("claim_value");
 
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("role_id");
 
                     b.HasKey("Id");
@@ -584,7 +555,7 @@ namespace Bie.Data.Migrations
                     b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -601,9 +572,8 @@ namespace Bie.Data.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("claim_value");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("user_id");
 
                     b.HasKey("Id");
@@ -613,7 +583,7 @@ namespace Bie.Data.Migrations
                     b.ToTable("AspNetUserClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)")
@@ -627,9 +597,8 @@ namespace Bie.Data.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("provider_display_name");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("user_id");
 
                     b.HasKey("LoginProvider", "ProviderKey");
@@ -639,14 +608,14 @@ namespace Bie.Data.Migrations
                     b.ToTable("AspNetUserLogins", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)")
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("user_id");
 
-                    b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(450)")
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("role_id");
 
                     b.HasKey("UserId", "RoleId");
@@ -656,10 +625,10 @@ namespace Bie.Data.Migrations
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)")
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnName("user_id");
 
                     b.Property<string>("LoginProvider")
@@ -686,17 +655,6 @@ namespace Bie.Data.Migrations
                         .HasForeignKey("CityId");
 
                     b.Navigation("City");
-                });
-
-            modelBuilder.Entity("Bie.Business.Models.CompanyCategory", b =>
-                {
-                    b.HasOne("Bie.Business.Models.Company", "Company")
-                        .WithMany("Categories")
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Company");
                 });
 
             modelBuilder.Entity("Bie.Business.Models.CompanyEmployee", b =>
@@ -740,7 +698,7 @@ namespace Bie.Data.Migrations
                     b.Navigation("Company");
                 });
 
-            modelBuilder.Entity("Bie.Business.Models.EmployeeServiceLink", b =>
+            modelBuilder.Entity("Bie.Business.Models.EmployeeService", b =>
                 {
                     b.HasOne("Bie.Business.Models.ApplicationUser", "Employee")
                         .WithMany("Services")
@@ -794,16 +752,16 @@ namespace Bie.Data.Migrations
                     b.Navigation("ServiceOffered");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
                     b.HasOne("Bie.Business.Models.ApplicationUser", null)
                         .WithMany()
@@ -812,7 +770,7 @@ namespace Bie.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
                     b.HasOne("Bie.Business.Models.ApplicationUser", null)
                         .WithMany()
@@ -821,9 +779,9 @@ namespace Bie.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -836,7 +794,7 @@ namespace Bie.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
                     b.HasOne("Bie.Business.Models.ApplicationUser", null)
                         .WithMany()
@@ -856,8 +814,6 @@ namespace Bie.Data.Migrations
 
             modelBuilder.Entity("Bie.Business.Models.Company", b =>
                 {
-                    b.Navigation("Categories");
-
                     b.Navigation("Employeers");
 
                     b.Navigation("OpeningHours");

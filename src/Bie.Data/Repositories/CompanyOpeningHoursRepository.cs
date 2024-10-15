@@ -10,11 +10,11 @@ public class CompanyOpeningHoursRepository : Repository<CompanyOpeningHours>, IC
     : base(context)
     {
     }
-    public List<CompanyOpeningHours> GetAll(string companyId)
+    public List<CompanyOpeningHours> GetAll(Guid companyId)
     {
         return DbSet.Where(c => c.CompanyId == companyId).ToList();
     }
-    public List<CompanyOpeningHours> GetByDayOfWeek(string companyId, DayOfWeek dayOfWeek)
+    public List<CompanyOpeningHours> GetByDayOfWeek(Guid companyId, DayOfWeek dayOfWeek)
     {
         return DbSet
         .Where(c => c.CompanyId == companyId && c.DayOfWeek == dayOfWeek)

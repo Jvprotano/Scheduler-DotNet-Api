@@ -1,9 +1,11 @@
-using Bie.Business.Interfaces.HttpServices;
+using System.Text.RegularExpressions;
+
 using Microsoft.Extensions.Configuration;
 
 using Azure.Storage.Blobs;
 
-using System.Text.RegularExpressions;
+using Bie.Business.Interfaces.HttpServices;
+using Bie.Business.ValueObjects;
 
 namespace Bie.Business.Services.HttpServices;
 public class ImageUploadService : IImageUploadService
@@ -17,17 +19,20 @@ public class ImageUploadService : IImageUploadService
         _azureContainer = configuration["AzureCfg:Container"] ?? throw new ArgumentException(nameof(configuration));
     }
 
-    public async Task<string> UploadImage(string imageBase64)
+    public async Task<string> UploadImage(Base64 imageBase64)
     {
+        if (!imageBase64.IsValid)
+            throw new InvalidOperationException("Invalid image base64");
+
         string fileName = Guid.NewGuid().ToString() + ".jpg";
-        var data = new Regex(@"data:image\/[a-z]+;base64,").Replace(imageBase64, "");
+        var data = new Regex(@"data:image\/[a-z]+;base64,").Replace(imageBase64.StrValue, "");
 
         byte[] bytes = Convert.FromBase64String(data);
 
         var blobClient = new BlobClient(_azureStorage, _azureContainer, fileName);
 
         using (var strem = new MemoryStream(bytes))
-        { 
+        {
             await blobClient.UploadAsync(strem);
         }
 

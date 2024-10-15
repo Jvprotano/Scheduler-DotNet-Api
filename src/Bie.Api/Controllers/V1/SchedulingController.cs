@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Mvc;
+
 using AutoMapper;
 
 using Bie.Api.Controllers.V1.Base;
@@ -5,8 +7,6 @@ using Bie.Api.DTOs.Request;
 using Bie.Api.DTOs.Response;
 using Bie.Business.Interfaces.Services;
 using Bie.Business.Models;
-
-using Microsoft.AspNetCore.Mvc;
 
 namespace Bie.Api.Controllers.V1;
 
@@ -53,11 +53,13 @@ public class SchedulingController : BaseController
     [Route("GetAvailableTimeSlots")]
     [ProducesResponseType(typeof(ApiResponse), 200)]
     [ProducesResponseType(typeof(ApiResponse), 400)]
-    public async Task<IActionResult> GetAvailableTimeSlots(string companyId, string serviceId, DateOnly date, string? professionalId = null)
+    public async Task<IActionResult> GetAvailableTimeSlots(Guid companyId, Guid serviceId, DateOnly date,
+                                                            Guid? professionalId = null)
     {
         try
         {
-            List<string> listTimes = (await _serviceScheduling.GetAvailableTimesAsync(companyId, serviceId, date, professionalId)).ToList();
+            List<string> listTimes = (await _serviceScheduling.GetAvailableTimesAsync(companyId, serviceId,
+                                        date, professionalId)).ToList();
 
             return SuccessResponse(listTimes);
         }

@@ -1,9 +1,10 @@
 using System.Data.Common;
+
+using Microsoft.EntityFrameworkCore;
+
 using Bie.Business.Interfaces.Repositories.Base;
 using Bie.Business.Models.Base;
 using Bie.Data.Context;
-
-using Microsoft.EntityFrameworkCore;
 
 namespace Bie.Data.Repositories.Base;
 public class Repository<T> : IRepository<T> where T : EntityBase
@@ -49,7 +50,7 @@ public class Repository<T> : IRepository<T> where T : EntityBase
             throw new Exception(ex.Message);
         }
     }
-    public virtual async Task<T> GetByIdAsync(string id, bool active = true)
+    public virtual async Task<T> GetByIdAsync(Guid id, bool active = true)
     {
         try
         {
@@ -69,7 +70,7 @@ public class Repository<T> : IRepository<T> where T : EntityBase
     {
         try
         {
-            if (string.IsNullOrWhiteSpace(entity.Id))
+            if (entity.Id == default)
             {
                 await DbSet.AddAsync(entity);
             }
@@ -93,7 +94,7 @@ public class Repository<T> : IRepository<T> where T : EntityBase
     {
         try
         {
-            entity.Status = Bie.Business.Enums.StatusEnum.TemporaryRemoved;
+            entity.TemporaryRemove();
             _context.Entry(entity).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
@@ -106,7 +107,8 @@ public class Repository<T> : IRepository<T> where T : EntityBase
     {
         try
         {
-            entity.Status = Bie.Business.Enums.StatusEnum.Removed;
+            entity.Remove();
+            _context.Entry(entity).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
         catch (Exception)
@@ -114,7 +116,7 @@ public class Repository<T> : IRepository<T> where T : EntityBase
             throw;
         }
     }
-    public async Task<T> GetAsync(string id, bool active = true)
+    public async Task<T> GetAsync(Guid id, bool active = true)
     {
         var query = DbSet.AsNoTracking()
             .Where(e => e.Id == id);

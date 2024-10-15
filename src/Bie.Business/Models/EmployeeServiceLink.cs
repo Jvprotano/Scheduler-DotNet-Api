@@ -1,10 +1,15 @@
 using Bie.Business.Models.Base;
 
 namespace Bie.Business.Models;
-public class EmployeeServiceLink : EntityBase
+public class EmployeeService : EntityBase
 {
-    public string EmployeeId { get; set; } = string.Empty;
-    public string ServiceId { get; set; } = string.Empty;
-    public virtual ApplicationUser Employee { get; set; } = new();
-    public virtual CompanyServiceOffered Service { get; set; } = new();
+    public EmployeeService(Guid employeeId, Guid serviceId) : base()
+    {
+        EmployeeId = employeeId;
+        ServiceId = serviceId;
+    }
+    public Guid EmployeeId { get; set; }
+    public Guid ServiceId { get; set; }
+    public virtual ApplicationUser? Employee { get; set; }
+    public virtual CompanyServiceOffered? Service { get; set; }
 }

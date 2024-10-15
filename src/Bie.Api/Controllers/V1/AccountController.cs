@@ -1,5 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.Data.Common;
+
+using Microsoft.AspNetCore.Mvc;
+
 using AutoMapper;
 
 using Bie.Api.Controllers.V1.Base;
@@ -7,9 +10,8 @@ using Bie.Api.DTOs.Request;
 using Bie.Api.DTOs.Response;
 using Bie.Business.Interfaces.Services;
 using Bie.Business.Models;
-using FluentValidation.Results;
 
-using Microsoft.AspNetCore.Mvc;
+using FluentValidation.Results;
 
 namespace Bie.Api.Controllers.V1;
 

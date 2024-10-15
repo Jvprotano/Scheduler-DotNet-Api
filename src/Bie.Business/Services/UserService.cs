@@ -1,15 +1,15 @@
-using Bie.Business.Interfaces.HttpServices;
-using Bie.Business.Interfaces.Services;
-using Bie.Business.Models;
-
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
+using Bie.Business.Interfaces.HttpServices;
+using Bie.Business.Interfaces.Services;
+using Bie.Business.Models;
+
 namespace Bie.Business.Services;
 public class UserService : UserManager<ApplicationUser>, IUserService
 {
-    private readonly IImageUploadService _imageService;
+    private readonly IImageUploadService _imageUploadService;
 
     public UserService(IUserStore<ApplicationUser> store,
                        IOptions<IdentityOptions> optionsAccessor,
@@ -21,23 +21,25 @@ public class UserService : UserManager<ApplicationUser>, IUserService
                        IImageUploadService imageService) :
                         base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
     {
-        _imageService = imageService;
+        _imageUploadService = imageService;
     }
 
     public override async Task<IdentityResult> UpdateAsync(ApplicationUser user)
     {
-        var tempUser = await FindByIdAsync(user.Id);
+        var tempUser = await FindByIdAsync(user.Id.ToString());
 
         if (tempUser == null)
             return IdentityResult.Failed(new IdentityError { Description = "User not found." });
 
-        if (!string.IsNullOrWhiteSpace(user.ImageBase64))
-            tempUser.ImageUrl = await _imageService.UploadImage(user.ImageBase64);
+        if (user.ImageBase64 != null && user.ImageBase64.IsValid)
+        {
+            string url = await _imageUploadService.UploadImage(user.ImageBase64);
 
-        tempUser.FirstName = user.FirstName;
-        tempUser.LastName = user.LastName;
-        tempUser.BirthDate = user.BirthDate;
-        tempUser.PhoneNumber = user.PhoneNumber;
+
+
+        }
+
+        tempUser.ChangeUserInfo(user.FirstName, user.LastName, user.BirthDate, user.PhoneNumber = "");
 
         return await base.UpdateAsync(tempUser);
     }

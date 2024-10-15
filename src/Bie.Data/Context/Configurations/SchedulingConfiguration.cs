@@ -9,8 +9,6 @@ public class SchedulingConfiguration : EntityBaseConfiguration<Scheduling>
 {
     public override void Configure(EntityTypeBuilder<Scheduling> builder)
     {
-        base.Configure(builder);
-
         builder.HasOne(c => c.Company)
             .WithMany(c => c.Schedulings)
             .HasForeignKey(c => c.CompanyId).OnDelete(DeleteBehavior.Restrict);
@@ -22,5 +20,7 @@ public class SchedulingConfiguration : EntityBaseConfiguration<Scheduling>
         builder.HasOne(c => c.ServiceOffered)
             .WithMany(c => c.Schedulings)
             .HasForeignKey(c => c.ServicesOfferedId).OnDelete(DeleteBehavior.Restrict);
+
+        base.Configure(builder);
     }
 }
