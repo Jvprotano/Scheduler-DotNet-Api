@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using System.Data.Common;
 using AutoMapper;
 
@@ -7,7 +6,6 @@ using Bie.Api.DTOs.Request;
 using Bie.Api.DTOs.Response;
 using Bie.Business.Interfaces.Services;
 using Bie.Business.Models;
-using FluentValidation.Results;
 
 using Microsoft.AspNetCore.Mvc;
 

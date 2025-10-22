@@ -2,7 +2,6 @@ using Bie.Business.Enums;
 using Bie.Api.DTOs.Base;
 
 using System.ComponentModel.DataAnnotations;
-using Bie.Business.Models;
 
 namespace Bie.Api.DTOs.Request;
 public class CompanyRequestDto : BaseDto

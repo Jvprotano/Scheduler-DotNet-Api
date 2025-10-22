@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Bie.Api.DTOs.Request;
 public class RegisterDto
@@ -8,7 +7,6 @@ public class RegisterDto
     public string FirstName { get; set; } = string.Empty;
     [Required(ErrorMessage = "Last Name is required")]
     public string LastName { get; set; } = string.Empty;
-    [Required(ErrorMessage = "Phone Number is required")]
     public string? PhoneNumber { get; set; }
     [Required(ErrorMessage = "Birth Date is required")]
     public DateOnly BirthDate { get; set; }

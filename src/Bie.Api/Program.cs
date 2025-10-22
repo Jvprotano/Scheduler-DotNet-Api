@@ -1,27 +1,28 @@
-using Asp.Versioning;
-
-using Bie.Api.Configuration.Swagger;
-using Bie.Business.Models;
-using Bie.Data.Context;
-using Bie.Data.Context.Extensions;
-
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.ApplicationInsights;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-
+using Asp.Versioning;
+using Bie.Api.Configuration.Swagger;
+using Bie.Business.Models;
+using Bie.Data.Context;
+using Bie.Data.Context.Extensions;
 using Swashbuckle.AspNetCore.SwaggerGen;
-
-using System.Text;
 
 [assembly: Microsoft.AspNetCore.Mvc.ApiController]
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
+builder.Services.Configure<RouteOptions>(
+    options =>
+    {
+        options.LowercaseUrls = true;
+        options.LowercaseQueryStrings = true;
+    });
 
 builder.Services.AddCors(opt =>
 {
@@ -41,23 +42,23 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddProblemDetails();
 builder.Services.AddApiVersioning(
-                    options =>
-                    {
-                        options.ReportApiVersions = true;
+        options =>
+        {
+            options.ReportApiVersions = true;
 
-                        options.Policies.Sunset(0.9)
-                                        .Effective(DateTimeOffset.Now.AddDays(60))
-                                        .Link("policy.html")
-                                            .Title("Versioning Policy")
-                                            .Type("text/html");
-                    })
-                .AddMvc()
-                .AddApiExplorer(
-                    options =>
-                    {
-                        options.GroupNameFormat = "'v'VVV";
-                        options.SubstituteApiVersionInUrl = true;
-                    });
+            options.Policies.Sunset(0.9)
+                            .Effective(DateTimeOffset.Now.AddDays(60))
+                            .Link("policy.html")
+                                .Title("Versioning Policy")
+                                .Type("text/html");
+        })
+    .AddMvc()
+    .AddApiExplorer(
+        options =>
+        {
+            options.GroupNameFormat = "'v'VVV";
+            options.SubstituteApiVersionInUrl = true;
+        });
 
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerGenOptions>();
 
@@ -65,7 +66,6 @@ builder.Services.AddSwaggerGen(
     options =>
     {
         options.OperationFilter<SwaggerDefaultValues>();
-
 
         options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
         {
@@ -117,13 +117,13 @@ builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
 builder.Services.AddRepositories();
 
 builder.Logging.AddApplicationInsights(
-        configureTelemetryConfiguration: (config) => 
+        configureTelemetryConfiguration: (config) =>
             config.ConnectionString = builder.Configuration.GetConnectionString("APPLICATIONINSIGHTS_CONNECTION_STRING"),
             configureApplicationInsightsLoggerOptions: (options) => { }
     );
