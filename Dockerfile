@@ -19,7 +19,7 @@ COPY --from=build /out ./
 
 # Define variáveis de ambiente
 ENV ASPNETCORE_URLS=http://+:8080
-ENV ASPNETCORE_ENVIRONMENT=Production
+ENV ASPNETCORE_ENVIRONMENT=Development
 
 # Expõe a porta da API
 EXPOSE 8080

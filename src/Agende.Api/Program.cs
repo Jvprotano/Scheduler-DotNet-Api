@@ -5,11 +5,11 @@ using Microsoft.Extensions.Logging.ApplicationInsights;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Asp.Versioning;
 using Agende.Api.Configuration.Swagger;
 using Agende.Business.Models;
 using Agende.Data.Context;
 using Agende.Data.Context.Extensions;
+using Asp.Versioning;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 [assembly: Microsoft.AspNetCore.Mvc.ApiController]
@@ -122,11 +122,16 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddRepositories();
 
-builder.Logging.AddApplicationInsights(
-        configureTelemetryConfiguration: (config) =>
-            config.ConnectionString = builder.Configuration.GetConnectionString("APPLICATIONINSIGHTS_CONNECTION_STRING"),
-            configureApplicationInsightsLoggerOptions: (options) => { }
+var insightsConnString = builder.Configuration.GetConnectionString("APPLICATIONINSIGHTS_CONNECTION_STRING");
+
+if (!string.IsNullOrWhiteSpace(insightsConnString) && insightsConnString != "APPLICATIONINSIGHTS_CONNECTIONSTRING")
+{
+    builder.Logging.AddApplicationInsights(
+        configureTelemetryConfiguration: (config) => config.ConnectionString = insightsConnString,
+        configureApplicationInsightsLoggerOptions: (options) => { }
     );
+}
+
 
 var app = builder.Build();
 
@@ -146,6 +151,9 @@ app.UseSwaggerUI(
         }
     });
 
+using var scope = app.Services.CreateScope();
+var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+db.Database.Migrate();
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
