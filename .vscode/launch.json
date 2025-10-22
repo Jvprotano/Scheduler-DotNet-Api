@@ -5,10 +5,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "C#: Bie.Api Debug",
+            "name": "C#: Agende.Api Debug",
             "type": "dotnet",
             "request": "launch",
-            "projectPath": "${workspaceFolder}/src/Bie.Api/Bie.Api.csproj"
+            "projectPath": "${workspaceFolder}/src/Agende.Api/Agende.Api.csproj"
         }
         
 

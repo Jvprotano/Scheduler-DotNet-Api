@@ -1,0 +1,6 @@
+@Agende.Api_HostAddress = https://agende-api.azurewebsites.net
+
+GET {{Agende.Api_HostAddress}}/swagger
+Accept: application/json
+
+###

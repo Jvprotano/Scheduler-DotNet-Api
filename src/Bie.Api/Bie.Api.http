@@ -1,6 +1,0 @@
-@Bie.Api_HostAddress = https://agende-api.azurewebsites.net
-
-GET {{Bie.Api_HostAddress}}/swagger
-Accept: application/json
-
-###

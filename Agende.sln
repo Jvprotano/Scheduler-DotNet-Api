@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agende.Api", "src\Agende.Api\Agende.Api.csproj", "{12C6F349-F4B0-467C-A0AE-91654C212B34}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agende.Business", "src\Agende.Business\Agende.Business.csproj", "{158511F3-0C2C-4575-8D57-D6F394ECEA77}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agende.Data", "src\Agende.Data\Agende.Data.csproj", "{BF354A0E-7228-460E-ADDB-8AB7FF16583B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{12C6F349-F4B0-467C-A0AE-91654C212B34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12C6F349-F4B0-467C-A0AE-91654C212B34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12C6F349-F4B0-467C-A0AE-91654C212B34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12C6F349-F4B0-467C-A0AE-91654C212B34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{158511F3-0C2C-4575-8D57-D6F394ECEA77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{158511F3-0C2C-4575-8D57-D6F394ECEA77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{158511F3-0C2C-4575-8D57-D6F394ECEA77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{158511F3-0C2C-4575-8D57-D6F394ECEA77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF354A0E-7228-460E-ADDB-8AB7FF16583B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF354A0E-7228-460E-ADDB-8AB7FF16583B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF354A0E-7228-460E-ADDB-8AB7FF16583B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF354A0E-7228-460E-ADDB-8AB7FF16583B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

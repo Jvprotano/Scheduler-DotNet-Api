@@ -484,7 +484,7 @@ $RECYCLE.BIN/
 *.swp
 
 *.dll
-src/Bie.Api/bin/Debug/net8.0/Bie.Api.pdb
-src/Bie.Data/obj/Debug/net8.0/Bie.Data.AssemblyInfo.cs
-src/Bie.Api/bin/Debug/net8.0/Bie.Api.dll
-src/Bie.Business/obj/Debug/net8.0/Bie.Business.dll
+src/Agende.Api/bin/Debug/net8.0/Agende.Api.pdb
+src/Agende.Data/obj/Debug/net8.0/Agende.Data.AssemblyInfo.cs
+src/Agende.Api/bin/Debug/net8.0/Agende.Api.dll
+src/Agende.Business/obj/Debug/net8.0/Agende.Business.dll
