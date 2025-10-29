@@ -1,12 +1,12 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Agende.Business.Interfaces.HttpServices;
 using Agende.Business.Interfaces.Services;
 using Agende.Business.Models;
 
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-
 namespace Agende.Business.Services;
+
 public class UserService : UserManager<ApplicationUser>, IUserService
 {
     private readonly IImageUploadService _imageService;
@@ -26,7 +26,7 @@ public class UserService : UserManager<ApplicationUser>, IUserService
 
     public override async Task<IdentityResult> UpdateAsync(ApplicationUser user)
     {
-        var tempUser = await FindByIdAsync(user.Id);
+        var tempUser = await FindByIdAsync(user.Id.ToString());
 
         if (tempUser == null)
             return IdentityResult.Failed(new IdentityError { Description = "User not found." });

@@ -35,7 +35,7 @@ public class SchedulingController : BaseController
 
             var scheduling = _mapper.Map<Scheduling>(model);
 
-            await _serviceScheduling.SaveAsync(scheduling);
+            await _serviceScheduling.CreateAsync(scheduling);
         }
         catch (FormatException)
         {
@@ -53,7 +53,7 @@ public class SchedulingController : BaseController
     [Route("GetAvailableTimeSlots")]
     [ProducesResponseType(typeof(ApiResponse), 200)]
     [ProducesResponseType(typeof(ApiResponse), 400)]
-    public async Task<IActionResult> GetAvailableTimeSlots(string companyId, string serviceId, DateOnly date, string? professionalId = null)
+    public async Task<IActionResult> GetAvailableTimeSlots(Guid companyId, Guid serviceId, DateOnly date, Guid? professionalId  = null)
     {
         try
         {

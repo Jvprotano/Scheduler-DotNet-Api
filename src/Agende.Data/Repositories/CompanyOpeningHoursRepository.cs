@@ -1,20 +1,21 @@
 using Agende.Business.Interfaces.Repositories;
-using Agende.Data.Context;
 using Agende.Business.Models;
+using Agende.Data.Context;
 using Agende.Data.Repositories.Base;
 
 namespace Agende.Data.Repositories;
+
 public class CompanyOpeningHoursRepository : Repository<CompanyOpeningHours>, ICompanyOpeningHoursRepository
 {
     public CompanyOpeningHoursRepository(ApplicationDbContext context)
     : base(context)
     {
     }
-    public List<CompanyOpeningHours> GetAll(string companyId)
+    public List<CompanyOpeningHours> GetAll(Guid companyId)
     {
         return DbSet.Where(c => c.CompanyId == companyId).ToList();
     }
-    public List<CompanyOpeningHours> GetByDayOfWeek(string companyId, DayOfWeek dayOfWeek)
+    public List<CompanyOpeningHours> GetByDayOfWeek(Guid companyId, DayOfWeek dayOfWeek)
     {
         return DbSet
         .Where(c => c.CompanyId == companyId && c.DayOfWeek == dayOfWeek)

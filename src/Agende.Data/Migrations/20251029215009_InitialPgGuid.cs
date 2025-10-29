@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -6,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Agende.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialPg : Migration
+    public partial class InitialPgGuid : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,7 +16,7 @@ namespace Agende.Data.Migrations
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    id = table.Column<string>(type: "text", nullable: false),
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
                     name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     normalized_name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     concurrency_stamp = table.Column<string>(type: "text", nullable: true)
@@ -29,15 +30,13 @@ namespace Agende.Data.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    id = table.Column<string>(type: "text", nullable: false),
-                    birth_date = table.Column<DateOnly>(type: "date", nullable: false),
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    birth_date = table.Column<DateOnly>(type: "date", nullable: true),
                     cpf = table.Column<string>(type: "text", nullable: true),
                     first_name = table.Column<string>(type: "text", nullable: false),
                     last_name = table.Column<string>(type: "text", nullable: false),
                     status = table.Column<int>(type: "integer", nullable: false),
-                    auto_generated_image = table.Column<bool>(type: "boolean", nullable: false),
                     image_url = table.Column<string>(type: "text", nullable: true),
-                    image_prompt = table.Column<string>(type: "text", nullable: true),
                     user_name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     normalized_user_name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -59,20 +58,24 @@ namespace Agende.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "cities",
+                name: "companies",
                 columns: table => new
                 {
-                    id = table.Column<string>(type: "text", nullable: false),
-                    name = table.Column<string>(type: "text", nullable: true),
-                    state = table.Column<string>(type: "text", nullable: true),
-                    country = table.Column<string>(type: "text", nullable: true),
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    description = table.Column<string>(type: "text", nullable: false),
+                    cnpj = table.Column<string>(type: "text", nullable: true),
+                    image_url = table.Column<string>(type: "text", nullable: true),
+                    inactive_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    scheduling_url = table.Column<string>(type: "text", nullable: false),
+                    schedule_status = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
                     status = table.Column<int>(type: "integer", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_cities", x => x.id);
+                    table.PrimaryKey("PK_companies", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -81,7 +84,7 @@ namespace Agende.Data.Migrations
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    role_id = table.Column<string>(type: "text", nullable: false),
+                    role_id = table.Column<Guid>(type: "uuid", nullable: false),
                     claim_type = table.Column<string>(type: "text", nullable: true),
                     claim_value = table.Column<string>(type: "text", nullable: true)
                 },
@@ -102,7 +105,7 @@ namespace Agende.Data.Migrations
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    user_id = table.Column<string>(type: "text", nullable: false),
+                    user_id = table.Column<Guid>(type: "uuid", nullable: false),
                     claim_type = table.Column<string>(type: "text", nullable: true),
                     claim_value = table.Column<string>(type: "text", nullable: true)
                 },
@@ -124,7 +127,7 @@ namespace Agende.Data.Migrations
                     login_provider = table.Column<string>(type: "text", nullable: false),
                     provider_key = table.Column<string>(type: "text", nullable: false),
                     provider_display_name = table.Column<string>(type: "text", nullable: true),
-                    user_id = table.Column<string>(type: "text", nullable: false)
+                    user_id = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -141,8 +144,8 @@ namespace Agende.Data.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    user_id = table.Column<string>(type: "text", nullable: false),
-                    role_id = table.Column<string>(type: "text", nullable: false)
+                    user_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    role_id = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -165,7 +168,7 @@ namespace Agende.Data.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    user_id = table.Column<string>(type: "text", nullable: false),
+                    user_id = table.Column<Guid>(type: "uuid", nullable: false),
                     login_provider = table.Column<string>(type: "text", nullable: false),
                     name = table.Column<string>(type: "text", nullable: false),
                     value = table.Column<string>(type: "text", nullable: true)
@@ -182,67 +185,11 @@ namespace Agende.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "companies",
-                columns: table => new
-                {
-                    id = table.Column<string>(type: "text", nullable: false),
-                    description = table.Column<string>(type: "text", nullable: false),
-                    cnpj = table.Column<string>(type: "text", nullable: true),
-                    is_virtual = table.Column<bool>(type: "boolean", nullable: false),
-                    inactive_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    scheduling_url = table.Column<string>(type: "text", nullable: false),
-                    schedule_status = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
-                    status = table.Column<int>(type: "integer", nullable: false),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    name = table.Column<string>(type: "text", nullable: false),
-                    email = table.Column<string>(type: "text", nullable: false),
-                    city_id = table.Column<string>(type: "text", nullable: true),
-                    address = table.Column<string>(type: "text", nullable: true),
-                    address_number = table.Column<string>(type: "text", nullable: true),
-                    postal_code = table.Column<string>(type: "text", nullable: true),
-                    image_url = table.Column<string>(type: "text", nullable: true),
-                    auto_generated_image = table.Column<bool>(type: "boolean", nullable: false),
-                    image_prompt = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_companies", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_companies_cities_city_id",
-                        column: x => x.city_id,
-                        principalTable: "cities",
-                        principalColumn: "id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "companies_categories",
-                columns: table => new
-                {
-                    id = table.Column<string>(type: "text", nullable: false),
-                    company_id = table.Column<string>(type: "text", nullable: false),
-                    category_id = table.Column<int>(type: "integer", nullable: false),
-                    status = table.Column<int>(type: "integer", nullable: false),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_companies_categories", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_companies_categories_companies_company_id",
-                        column: x => x.company_id,
-                        principalTable: "companies",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "companies_opening_hours",
                 columns: table => new
                 {
-                    id = table.Column<string>(type: "text", nullable: false),
-                    company_id = table.Column<string>(type: "text", nullable: false),
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    company_id = table.Column<Guid>(type: "uuid", nullable: false),
                     day_of_week = table.Column<int>(type: "integer", nullable: false),
                     opening_hour = table.Column<TimeOnly>(type: "time without time zone", nullable: false),
                     closing_hour = table.Column<TimeOnly>(type: "time without time zone", nullable: false),
@@ -265,11 +212,11 @@ namespace Agende.Data.Migrations
                 name: "companies_services_offered",
                 columns: table => new
                 {
-                    id = table.Column<string>(type: "text", nullable: false),
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
                     name = table.Column<string>(type: "text", nullable: false),
                     description = table.Column<string>(type: "text", nullable: true),
                     price = table.Column<float>(type: "real", nullable: false),
-                    company_id = table.Column<string>(type: "text", nullable: false),
+                    company_id = table.Column<Guid>(type: "uuid", nullable: false),
                     duration = table.Column<TimeOnly>(type: "time without time zone", nullable: false),
                     status = table.Column<int>(type: "integer", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -290,9 +237,9 @@ namespace Agende.Data.Migrations
                 name: "company_employees",
                 columns: table => new
                 {
-                    id = table.Column<string>(type: "text", nullable: false),
-                    company_id = table.Column<string>(type: "text", nullable: false),
-                    user_id = table.Column<string>(type: "text", nullable: false),
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    company_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    user_id = table.Column<Guid>(type: "uuid", nullable: false),
                     is_owner = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
                     status = table.Column<int>(type: "integer", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -319,9 +266,9 @@ namespace Agende.Data.Migrations
                 name: "employee_services",
                 columns: table => new
                 {
-                    id = table.Column<string>(type: "text", nullable: false),
-                    employee_id = table.Column<string>(type: "text", nullable: false),
-                    service_id = table.Column<string>(type: "text", nullable: false),
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    employee_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    service_id = table.Column<Guid>(type: "uuid", nullable: false),
                     status = table.Column<int>(type: "integer", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
@@ -347,13 +294,13 @@ namespace Agende.Data.Migrations
                 name: "schedulings",
                 columns: table => new
                 {
-                    id = table.Column<string>(type: "text", nullable: false),
-                    company_id = table.Column<string>(type: "text", nullable: false),
-                    customer_id = table.Column<string>(type: "text", nullable: false),
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    company_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    customer_id = table.Column<Guid>(type: "uuid", nullable: false),
                     date = table.Column<DateOnly>(type: "date", nullable: false),
                     time = table.Column<TimeOnly>(type: "time without time zone", nullable: false),
-                    services_offered_id = table.Column<string>(type: "text", nullable: false),
-                    employee_id = table.Column<string>(type: "text", nullable: false),
+                    services_offered_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    employee_id = table.Column<Guid>(type: "uuid", nullable: false),
                     status = table.Column<int>(type: "integer", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
@@ -425,16 +372,6 @@ namespace Agende.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_companies_city_id",
-                table: "companies",
-                column: "city_id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_companies_categories_company_id",
-                table: "companies_categories",
-                column: "company_id");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_companies_opening_hours_company_id",
                 table: "companies_opening_hours",
                 column: "company_id");
@@ -504,9 +441,6 @@ namespace Agende.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "companies_categories");
-
-            migrationBuilder.DropTable(
                 name: "companies_opening_hours");
 
             migrationBuilder.DropTable(
@@ -529,9 +463,6 @@ namespace Agende.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "companies");
-
-            migrationBuilder.DropTable(
-                name: "cities");
         }
     }
 }

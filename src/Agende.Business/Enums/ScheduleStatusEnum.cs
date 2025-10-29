@@ -1,4 +1,5 @@
 namespace Agende.Business.Enums;
+
 public enum ScheduleStatusEnum
 {
     Closed = 0,

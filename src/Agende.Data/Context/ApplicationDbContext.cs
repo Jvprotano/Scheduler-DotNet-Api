@@ -1,15 +1,16 @@
-using Agende.Business.Models;
-using Agende.Business.Models.Base;
-using Agende.Data.Context.Extensions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Agende.Business.Models;
+using Agende.Business.Models.Base;
+using Agende.Data.Context.Extensions;
 
 namespace Agende.Data.Context;
 
-public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
 {
-    public ApplicationDbContext(DbContextOptions options) : base(options)
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
     }
 

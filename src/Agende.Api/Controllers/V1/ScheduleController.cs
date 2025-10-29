@@ -21,7 +21,7 @@ public class ScheduleController : BaseController
     [ProducesResponseType(typeof(ApiResponse), 200)]
     [ProducesResponseType(typeof(ApiResponse), 400)]
 
-    public async Task<IActionResult> Close(string companyId)
+    public async Task<IActionResult> Close(Guid companyId)
     {
         try
         {
@@ -29,7 +29,7 @@ public class ScheduleController : BaseController
 
             company.ScheduleStatus = ScheduleStatusEnum.Closed;
 
-            await _companyService.SaveAsync(company);
+            await _companyService.CreateAsync(company);
 
             return SuccessResponse("Schedule closed successfully");
         }
@@ -40,7 +40,7 @@ public class ScheduleController : BaseController
     }
     [HttpGet]
     [Route("Open/{companyId}")]
-    public async Task<IActionResult> Open([FromRoute] string companyId)
+    public async Task<IActionResult> Open([FromRoute] Guid companyId)
     {
         try
         {
@@ -48,7 +48,7 @@ public class ScheduleController : BaseController
 
             company.ScheduleStatus = ScheduleStatusEnum.Open;
 
-            await _companyService.SaveAsync(company);
+            await _companyService.CreateAsync(company);
 
             return SuccessResponse("Schedule opened successfully");
         }

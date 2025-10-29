@@ -10,6 +10,8 @@ using Agende.Data.Context;
 using Agende.Data.Context.Extensions;
 using Asp.Versioning;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 
 [assembly: Microsoft.AspNetCore.Mvc.ApiController]
 

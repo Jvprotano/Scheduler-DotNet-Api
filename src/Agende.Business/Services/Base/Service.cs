@@ -18,25 +18,16 @@ public class Service<T> : IService<T> where T : EntityBase
     {
         return _repositoryBase.GetAll(active);
     }
-    public virtual async Task<T> GetByIdAsync(string id, bool active = true)
+    public virtual async Task<T> GetByIdAsync(Guid id, bool active = true)
     {
         return await _repositoryBase.GetByIdAsync(id, active);
     }
-    public async Task<T> GetAsync(string id, bool active = true)
+    public async Task<T> GetAsync(Guid id, bool active = true)
     {
         return await _repositoryBase.GetAsync(id, active);
     }
-    public virtual async Task SaveAsync(T entity)
+    public virtual async Task CreateAsync(T entity)
     {
-        Validate(entity);
         await _repositoryBase.SaveAsync(entity);
-    }
-    public virtual void Validate(T entity)
-    {
-        if (entity == null)
-            throw new Exception("Entity is null");
-
-        if (string.IsNullOrWhiteSpace(entity.Id) || !Guid.TryParse(entity.Id, out _))
-            throw new Exception("Id is invalid");
     }
 }

@@ -1,11 +1,11 @@
 using System.Data.Common;
+using Microsoft.EntityFrameworkCore;
 using Agende.Business.Interfaces.Repositories.Base;
 using Agende.Business.Models.Base;
 using Agende.Data.Context;
 
-using Microsoft.EntityFrameworkCore;
-
 namespace Agende.Data.Repositories.Base;
+
 public class Repository<T> : IRepository<T> where T : EntityBase
 {
     private readonly DbSet<T> _dbSet;
@@ -49,7 +49,7 @@ public class Repository<T> : IRepository<T> where T : EntityBase
             throw new Exception(ex.Message);
         }
     }
-    public virtual async Task<T> GetByIdAsync(string id, bool active = true)
+    public virtual async Task<T> GetByIdAsync(Guid id, bool active = true)
     {
         try
         {
@@ -69,7 +69,7 @@ public class Repository<T> : IRepository<T> where T : EntityBase
     {
         try
         {
-            if (string.IsNullOrWhiteSpace(entity.Id))
+            if (entity.Id == Guid.Empty)
             {
                 await DbSet.AddAsync(entity);
             }
@@ -114,7 +114,7 @@ public class Repository<T> : IRepository<T> where T : EntityBase
             throw;
         }
     }
-    public async Task<T> GetAsync(string id, bool active = true)
+    public async Task<T> GetAsync(Guid id, bool active = true)
     {
         var query = DbSet.AsNoTracking()
             .Where(e => e.Id == id);

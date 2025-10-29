@@ -9,6 +9,6 @@ public class CompanyServiceOfferedRequestDto : BaseDto
     [Required]
     public float Price { get; set; }
     [Required]
-    public string CompanyId { get; set; } = string.Empty;
+    public Guid CompanyId { get; set; }
     public TimeOnly Duration { get; set; }
 }

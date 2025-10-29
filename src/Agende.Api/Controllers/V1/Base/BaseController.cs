@@ -1,10 +1,8 @@
-using Asp.Versioning;
-
-using Agende.Api.DTOs.Response;
-
-using Microsoft.AspNetCore.Mvc;
-
+using System.IdentityModel.Tokens.Jwt;
 using System.Net;
+using Microsoft.AspNetCore.Mvc;
+using Agende.Api.DTOs.Response;
+using Asp.Versioning;
 
 namespace Agende.Api.Controllers.V1.Base;
 
@@ -35,4 +33,8 @@ public abstract class BaseController : ControllerBase
 
         return StatusCode((int)status, errorResponse);
     }
+
+    protected Guid GetUserIdFromClaims()
+        => new(User.Claims.First(c => c.Type == "userId").Value);
+
 }

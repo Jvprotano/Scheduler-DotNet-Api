@@ -2,6 +2,7 @@ using Agende.Business.Enums;
 using Agende.Api.DTOs.Base;
 
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Agende.Api.DTOs.Response;
 public class CompanyResponseDto : BaseDto
@@ -20,6 +21,7 @@ public class CompanyResponseDto : BaseDto
     public string PostalCode { get; set; } = string.Empty;
     [Display(Name = "Is not a physical location")]
     public bool IsVirtual { get; set; }
+    [JsonPropertyName("image")]
     public string ImageUrl { get; set; } = string.Empty;
     public ScheduleStatusEnum ScheduleStatus { get; set; }
     public IList<CompanyServiceOfferedDto>? ServicesOffered { get; set; }

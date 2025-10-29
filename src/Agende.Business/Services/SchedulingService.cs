@@ -5,6 +5,7 @@ using Agende.Business.Models;
 using Agende.Business.Services.Base;
 
 namespace Agende.Business.Services;
+
 public class SchedulingService : Service<Scheduling>, ISchedulingService
 {
     private readonly ISchedulingRepository _repositoryScheduling;
@@ -18,39 +19,43 @@ public class SchedulingService : Service<Scheduling>, ISchedulingService
         _repositoryCompanyOpeningHours = repositoryCompanyOpeningHours;
         _serviceCompany = serviceCompany;
     }
-    public override void Validate(Scheduling entity)
+    public void Validate(Scheduling entity)
     {
-        if (string.IsNullOrWhiteSpace(entity.CompanyId))
+        if (entity.CompanyId == Guid.Empty)
             throw new Exception("Company is required");
-        if (string.IsNullOrWhiteSpace(entity.CustomerId))
+        if (entity.CustomerId == Guid.Empty)
             throw new Exception("Customer is required");
         if (entity.Date == default)
             throw new Exception("Scheduled date is required");
-        if (string.IsNullOrWhiteSpace(entity.ServicesOfferedId))
+        if (entity.ServicesOfferedId == Guid.Empty)
             throw new Exception("Service is required");
-
-        base.Validate(entity);
     }
 
-    public override Task SaveAsync(Scheduling entity)
+    public override Task CreateAsync(Scheduling entity)
     {
-        return base.SaveAsync(entity);
+        return base.CreateAsync(entity);
     }
 
-    public async Task<IEnumerable<Scheduling>> GetAllOpenByCompanyIdAsync(string companyId, DateOnly initialDate, DateOnly finalDate)
+    public async Task<IEnumerable<Scheduling>> GetAllOpenByCompanyIdAsync(Guid companyId, DateOnly initialDate, DateOnly finalDate)
     {
         return await _repositoryScheduling.GetAllOpenByCompanyIdAsync(companyId, initialDate, finalDate);
     }
 
-    public async Task<IEnumerable<string>> GetAvailableTimesAsync(string companyId, string serviceSelectedId, DateOnly date, string? professionalId = null)
+    public async Task<IEnumerable<string>> GetAvailableTimesAsync(Guid companyId, Guid serviceSelectedId, DateOnly date, Guid? professionalId = null)
     {
         List<CompanyOpeningHours> openingHours = _repositoryCompanyOpeningHours.GetByDayOfWeek(companyId, date.DayOfWeek);
 
-        List<TimeOnly> availableTimes = new();
+        List<TimeOnly> availableTimes = [];
 
         if (openingHours.Count > 0)
         {
             Company company = await _serviceCompany.GetByIdAsync(companyId);
+
+            if (company == null)
+                throw new ArgumentNullException("Company not found");
+
+            if (company.ServicesOffered == null || company.ServicesOffered.Count == 0)
+                throw new ArgumentNullException("Company has no services offered");
 
             CompanyServiceOffered? serviceOffered = company.ServicesOffered.Where(c => c.Id == serviceSelectedId).FirstOrDefault();
 
@@ -67,7 +72,7 @@ public class SchedulingService : Service<Scheduling>, ISchedulingService
                 if (item.OpeningHour == item.ClosingHour)
                     continue;
                 if (item.OpeningHour > item.ClosingHour)
-                    throw new Exception("Opening hour cannot be greater than closing hour");
+                    throw new InvalidDataException("Opening hour cannot be greater than closing hour");
 
                 if (date == DateOnly.FromDateTime(DateTime.Now) && item.OpeningHour < TimeOnly.FromDateTime(DateTime.Now))
                     item.OpeningHour = TimeOnly.FromDateTime(DateTime.Now);

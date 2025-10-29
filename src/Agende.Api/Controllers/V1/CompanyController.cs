@@ -1,17 +1,14 @@
-using AutoMapper;
-
+using System.Data.Common;
+using System.Net;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Agende.Api.Controllers.V1.Base;
 using Agende.Api.DTOs.Request;
 using Agende.Api.DTOs.Response;
 using Agende.Business.Interfaces.Services;
 using Agende.Business.Models;
-
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-
-using System.Data.Common;
-using System.Net;
+using AutoMapper;
 
 namespace Agende.Api.Controllers.V1;
 
@@ -29,13 +26,15 @@ public class CompanyController : BaseController
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody] CompanyRequestDto model)
+    public async Task<IActionResult> Post([FromBody] CompanyRequestDto request)
     {
         try
         {
-            var company = _mapper.Map<Company>(model);
+            var company = _mapper.Map<Company>(request);
 
-            await _companyService.SaveAsync(company);
+            var userId = GetUserIdFromClaims();
+
+            await _companyService.CreateCompanyAsync(company, userId);
 
             return SuccessResponse(new { }, "Created successfuly.");
         }
@@ -46,18 +45,18 @@ public class CompanyController : BaseController
     }
 
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> Put([FromBody] CompanyRequestDto model)
+    public async Task<IActionResult> Put([FromBody] CompanyRequestDto request)
     {
         try
         {
-            if (model == null)
+            if (request == null)
                 throw new ArgumentNullException("Company not found");
-            if (model.Id == null || model.Id == default)
+            if (request.Id == default)
                 throw new ArgumentNullException("Existing company must be informed");
 
-            var company = _mapper.Map<Company>(model);
+            var company = _mapper.Map<Company>(request);
 
-            await _companyService.SaveAsync(company);
+            await _companyService.CreateAsync(company);
 
             return SuccessResponse(new { }, "Updated successfuly.");
         }
@@ -71,7 +70,7 @@ public class CompanyController : BaseController
         }
     }
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult> Delete(string id)
+    public async Task<IActionResult> Delete(Guid id)
     {
         try
         {
@@ -86,7 +85,7 @@ public class CompanyController : BaseController
     }
     [Route("Reactive")]
     [HttpGet]
-    public async Task<IActionResult> Reactive(string id)
+    public async Task<IActionResult> Reactive(Guid id)
     {
         try
         {
@@ -98,9 +97,9 @@ public class CompanyController : BaseController
             return ErrorResponse(ex.Message);
         }
     }
-    [HttpGet]
+    [HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(CompanyResponseDto), 200)]
-    public async Task<IActionResult> Get(string id)
+    public async Task<IActionResult> GetById(Guid id)
     {
         var model = _mapper.Map<CompanyResponseDto>(await _companyService.GetByIdAsync(id));
 
@@ -120,37 +119,20 @@ public class CompanyController : BaseController
 
         return SuccessResponse(model);
     }
-    [HttpGet]
-    [Route("CheckUrlIsValid")]
-    public async Task<IActionResult> CheckUrlIsValid([FromQuery] string schedulingUrl, [FromQuery] string? id = null)
-    {
-        try
-        {
-            bool urlIsValid = false;
 
-            if (!string.IsNullOrWhiteSpace(id))
-                urlIsValid = !await _companyService.GetAll().AnyAsync(c => c.SchedulingUrl == schedulingUrl && c.Id != id);
-
-            urlIsValid = !await _companyService.GetAll().AnyAsync(c => c.SchedulingUrl == schedulingUrl);
-
-            return SuccessResponse(urlIsValid);
-        }
-        catch (Exception ex)
-        {
-            return ErrorResponse(ex.Message);
-        }
-    }
     [HttpGet]
     [Route("GetByUserId")]
     [ProducesResponseType(typeof(List<CompanyResponseDto>), 200)]
-    public async Task<IActionResult> GetByUserId(string userId)
+    public async Task<IActionResult> GetByUserId()
     {
         try
         {
-            if (userId == null)
+            var tokenUserId = GetUserIdFromClaims();
+
+            if (tokenUserId == default)
                 throw new ArgumentNullException("User not found");
 
-            var companies = (await _companyService.GetCompaniesByUserAsync(userId)).ToList();
+            var companies = (await _companyService.GetCompaniesByUserAsync(tokenUserId)).ToList();
 
             if (companies == null || !companies.Any())
                 return SuccessResponse(new object());
@@ -159,6 +141,27 @@ public class CompanyController : BaseController
             return SuccessResponse(model);
         }
         catch (DbException ex)
+        {
+            return ErrorResponse(ex.Message);
+        }
+    }
+
+    [HttpGet]
+    [Route("CheckUrlIsValid")]
+    public async Task<IActionResult> CheckUrlIsValid([FromQuery] string schedulingUrl, [FromQuery] Guid? id = null)
+    {
+        try
+        {
+            bool urlIsValid = false;
+
+            if (id != null && id != default)
+                urlIsValid = !await _companyService.GetAll().AnyAsync(c => c.SchedulingUrl == schedulingUrl && c.Id != id);
+
+            urlIsValid = !await _companyService.GetAll().AnyAsync(c => c.SchedulingUrl == schedulingUrl);
+
+            return SuccessResponse(urlIsValid);
+        }
+        catch (Exception ex)
         {
             return ErrorResponse(ex.Message);
         }

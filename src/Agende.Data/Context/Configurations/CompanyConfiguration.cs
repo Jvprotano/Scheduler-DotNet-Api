@@ -1,12 +1,12 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Agende.Business.Enums;
 using Agende.Business.Models;
 using Agende.Data.Context.Configurations.Base;
-using Microsoft.EntityFrameworkCore;
-
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Agende.Data.Context.Configurations;
-public class CompanyConfiguration : ProfileBaseConfiguration<Company>
+
+public class CompanyConfiguration : EntityBaseConfiguration<Company>
 {
     public override void Configure(EntityTypeBuilder<Company> builder)
     {

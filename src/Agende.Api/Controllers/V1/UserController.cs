@@ -1,15 +1,13 @@
 using System.Security.Claims;
-using AutoMapper;
-
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Agende.Api.Controllers.V1.Base;
 using Agende.Api.DTOs.Request;
 using Agende.Api.DTOs.Response;
 using Agende.Business.Interfaces.Services;
 using Agende.Business.Models;
-
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
 
 namespace Agende.Api.Controllers.V1;
 
@@ -30,9 +28,9 @@ public class UserController : BaseController
 
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(UserResponseDto), 200)]
-    public async Task<IActionResult> Get(string id)
+    public async Task<IActionResult> Get(Guid id)
     {
-        var user = await _userManager.FindByIdAsync(id);
+        var user = await _userManager.FindByIdAsync(id.ToString());
 
         if (user == null)
             return this.ErrorResponse("User not found.");
@@ -66,7 +64,7 @@ public class UserController : BaseController
             if (user == null || user.Id == default)
                 throw new ArgumentException("User must be informed.");
 
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "");
 
             if (userId != user.Id)
                 return ErrorResponse("User not authorized.");

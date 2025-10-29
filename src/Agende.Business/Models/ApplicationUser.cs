@@ -4,7 +4,7 @@ using Agende.Business.Enums;
 
 namespace Agende.Business.Models;
 
-public class ApplicationUser : IdentityUser
+public class ApplicationUser : IdentityUser<Guid>
 {
     public ApplicationUser()
     {

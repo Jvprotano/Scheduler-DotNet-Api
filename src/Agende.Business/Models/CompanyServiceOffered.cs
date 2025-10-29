@@ -13,7 +13,7 @@ public class CompanyServiceOffered : EntityBase
     [Required]
     public float Price { get; set; }
     [Required]
-    public string CompanyId { get; set; } = string.Empty;
+    public Guid CompanyId { get; set; }
     public Company? Company { get; set; }
     public TimeOnly Duration { get; set; }
     public IList<Scheduling> Schedulings { get; set; } = [];
