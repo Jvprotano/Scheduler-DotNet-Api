@@ -1,17 +1,16 @@
-using Agende.Business.Interfaces.Services;
-using Agende.Business.Models;
-
+using System.ComponentModel.DataAnnotations;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System.ComponentModel.DataAnnotations;
-
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+using Agende.Business.Interfaces.Services;
+using Agende.Business.Models;
 
 namespace Agende.Business.Services;
+
 public class AuthService : IAuthService
 {
     private readonly IConfiguration _configuration;
@@ -61,16 +60,13 @@ public class AuthService : IAuthService
 
     public async Task<ApplicationUser?> LoginAsync(string emailOrPhone, string password, bool rememberMe)
     {
-        var user = await _userManager.FindByEmailAsync(emailOrPhone);
+        var result = await _signInManager.PasswordSignInAsync(emailOrPhone, password, rememberMe, lockoutOnFailure: false);
 
-        user ??= await this.FindByPhoneAsync(emailOrPhone);
-
-        if (user == null)
+        if (!result.Succeeded)
             return null;
 
-        var result = await _signInManager.PasswordSignInAsync(user?.UserName ?? emailOrPhone ?? "", password ?? "", rememberMe, lockoutOnFailure: false);
-
-        return result.Succeeded ? user : null;
+        var user = await _userManager.FindByEmailAsync(emailOrPhone) ?? await FindByPhoneAsync(emailOrPhone);
+        return user;
     }
 
     public async Task<ApplicationUser?> FindByEmailAsync(string email)
@@ -79,25 +75,18 @@ public class AuthService : IAuthService
     }
     private async Task ValidateAsync(ApplicationUser appUser)
     {
-        try
-        {
-            if (string.IsNullOrWhiteSpace(appUser.FirstName))
-                throw new ValidationException("First Name is required");
-            if (string.IsNullOrWhiteSpace(appUser.LastName))
-                throw new ValidationException("First Name is required");
-            if (string.IsNullOrWhiteSpace(appUser.PhoneNumber))
-                throw new ValidationException("Phone number is required");
-            if (appUser.BirthDate == default)
-                throw new ValidationException("Birth Date is required");
-            if (await FindByEmailAsync(appUser.Email ?? "") != null)
-                throw new ValidationException("Email already exists");
-            if (await FindByPhoneAsync(appUser.PhoneNumber ?? "") != null)
-                throw new ValidationException("Phone already exists");
-        }
-        catch (ValidationException)
-        {
-            throw;
-        }
+        if (string.IsNullOrWhiteSpace(appUser.FirstName))
+            throw new ValidationException("First Name is required");
+        if (string.IsNullOrWhiteSpace(appUser.LastName))
+            throw new ValidationException("First Name is required");
+        if (await FindByEmailAsync(appUser.Email ?? "") != null)
+            throw new ValidationException("Email already exists");
+        // if (string.IsNullOrWhiteSpace(appUser.PhoneNumber))
+        //     throw new ValidationException("Phone number is required");
+        // if (appUser.BirthDate == default)
+        //     throw new ValidationException("Birth Date is required");
+        // if (await FindByPhoneAsync(appUser.PhoneNumber ?? "") != null)
+        //     throw new ValidationException("Phone already exists");
     }
 
     public async Task<ApplicationUser?> CreateAsync(ApplicationUser user, string password)

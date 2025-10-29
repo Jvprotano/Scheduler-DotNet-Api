@@ -1,13 +1,13 @@
 using System.Data.Common;
-using AutoMapper;
-
+using System.Net;
+using Microsoft.AspNetCore.Mvc;
 using Agende.Api.Controllers.V1.Base;
 using Agende.Api.DTOs.Request;
 using Agende.Api.DTOs.Response;
+using Agende.Api.Validators;
 using Agende.Business.Interfaces.Services;
 using Agende.Business.Models;
-
-using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
 
 namespace Agende.Api.Controllers.V1;
 
@@ -30,7 +30,8 @@ public class AccountController : BaseController
     }
     [HttpPost]
     [Route("login")]
-    [ProducesResponseType(typeof(ApiResponse), 400)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
 
     public async Task<IActionResult> Login([FromBody] LoginDto model)
@@ -44,7 +45,7 @@ public class AccountController : BaseController
             if (user == null)
             {
                 _logger.LogWarning("Login failed for {EmailOrPhone}", model.EmailOrPhone);
-                return ErrorResponse("User not found or password is incorrect");
+                return ErrorResponse("User not found or password is incorrect", HttpStatusCode.Unauthorized);
             }
 
             var token = _authService.GenerateToken(user);
@@ -61,26 +62,26 @@ public class AccountController : BaseController
 
     [HttpPost]
     [Route("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterDto model)
+    public async Task<IActionResult> Register([FromBody] RegisterDto request)
     {
         try
         {
-            FluentValidation.Results.ValidationResult validationResult = new RegisterDtoValidator().Validate(model);
+            FluentValidation.Results.ValidationResult validationResult = await new RegisterDtoValidator().ValidateAsync(request);
 
             if (!validationResult.IsValid)
                 return ErrorResponse(validationResult.ToString());
 
-            var appUser = _mappper.Map<ApplicationUser>(model);
-            var user = await _authService.CreateAsync(appUser, model.Password);
+            var appUser = _mappper.Map<ApplicationUser>(request);
+            var user = await _authService.CreateAsync(appUser, request.Password);
 
             if (user != null)
             {
                 var userResponse = new UserResponseDto()
                 {
                     Id = user.Id,
-                    FirstName = model.FirstName,
-                    LastName = model.LastName,
-                    Email = model.Email
+                    FirstName = request.FirstName,
+                    LastName = request.LastName,
+                    Email = request.Email
                 };
 
                 _logger.LogInformation("Created user: " + userResponse.Email);
